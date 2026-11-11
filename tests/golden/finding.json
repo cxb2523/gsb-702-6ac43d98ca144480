@@ -1,0 +1,128 @@
+{
+  "complete": true,
+  "database_version": "2.34.0",
+  "detectors": [
+    {
+      "applicability": "not_applicable",
+      "bytes_inspected": 0,
+      "detector_id": "clawhavoc-skill",
+      "files_inspected": 0,
+      "files_seen": 0,
+      "not_scanned": [
+        "skill.registry_history",
+        "skill.remote_payloads",
+        "skill.runtime_behavior",
+        "skill.unreferenced_companion_files"
+      ]
+    },
+    {
+      "applicability": "applicable",
+      "bytes_inspected": 332,
+      "detector_id": "fakegit-archive-lure",
+      "files_inspected": 3,
+      "files_seen": 3,
+      "not_scanned": [
+        "archive.contents",
+        "git.history",
+        "github.release_assets",
+        "repository.ownership"
+      ]
+    },
+    {
+      "applicability": "applicable",
+      "bytes_inspected": 332,
+      "detector_id": "shai-hulud-keyv",
+      "files_inspected": 3,
+      "files_seen": 3,
+      "not_scanned": [
+        "git.history"
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "discovery": {
+    "directories_opened": 2,
+    "entries_seen": 5,
+    "exclusions": [
+      {
+        "paths": 1,
+        "reason": "installed_dependencies",
+        "subtrees": 1
+      }
+    ],
+    "files_selected": 3
+  },
+  "elapsed_ms": 0,
+  "findings": [
+    {
+      "campaign_ids": [
+        "shai-hulud-keyv-2026-08"
+      ],
+      "confidence": "confirmed",
+      "detector_id": "shai-hulud-keyv",
+      "evidence": "keyv@6.0.0",
+      "line": null,
+      "path": "package-lock.json",
+      "remediation_url": "https://cc.bruniaux.com/security/",
+      "rule_id": "compromised-lockfile-version",
+      "severity": "critical",
+      "technique_ids": [
+        "npm.compromised-version"
+      ]
+    },
+    {
+      "campaign_ids": [
+        "shai-hulud-keyv-2026-08"
+      ],
+      "confidence": "high",
+      "detector_id": "shai-hulud-keyv",
+      "evidence": "claude SessionStart: node setup.mjs",
+      "line": null,
+      "path": ".claude/settings.json",
+      "remediation_url": "https://cc.bruniaux.com/security/",
+      "rule_id": "campaign-startup-hook",
+      "severity": "high",
+      "technique_ids": [
+        "repository.startup-hook"
+      ]
+    },
+    {
+      "campaign_ids": [
+        "shai-hulud-keyv-2026-08"
+      ],
+      "confidence": "contested",
+      "detector_id": "shai-hulud-keyv",
+      "evidence": "@keyv/mongo@6.0.0 (contested intelligence; sources: JFrog, SafeDep)",
+      "line": null,
+      "path": "package-lock.json",
+      "remediation_url": "https://cc.bruniaux.com/security/",
+      "rule_id": "compromised-lockfile-version",
+      "severity": "high",
+      "technique_ids": [
+        "npm.compromised-version"
+      ]
+    }
+  ],
+  "not_scanned": [
+    "archive.contents",
+    "container.filesystems",
+    "git.history",
+    "github.release_assets",
+    "host.caches",
+    "host.credentials",
+    "host.global_config",
+    "host.processes",
+    "remediation.automatic",
+    "remote.ci",
+    "remote.repositories",
+    "repository.ownership",
+    "skill.registry_history",
+    "skill.remote_payloads",
+    "skill.runtime_behavior",
+    "skill.unreferenced_companion_files"
+  ],
+  "root": "<SCAN_ROOT>",
+  "schema_version": "2",
+  "scope": "source",
+  "tool_version": "0.1.0a0"
+}

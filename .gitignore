@@ -1,0 +1,13 @@
+.worktrees/
+.DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+docs/superpowers/
+.idea

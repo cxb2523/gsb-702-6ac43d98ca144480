@@ -1,0 +1,2444 @@
+schema_version: "1"
+kind: sources
+updated: "2026-11-05"
+sources:
+  - id: review-2026-11-ghsa-6xpm-ggf7-wc3p
+    title: mcp-remote OS command injection from an untrusted authorization endpoint
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/GHSA-6xpm-ggf7-wc3p
+    source_type: advisory
+    published_date: '2025-07-09'
+    topics:
+    - mcp
+    - npm
+    - oauth
+    supports:
+    - mcp-remote was exposed to OS command injection when connecting to untrusted MCP servers, through crafted
+      input in the authorization_endpoint response URL.
+    - 'Affected: mcp-remote >= 0.0.5, < 0.1.16. Patched: 0.1.16.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-8q5r-mmjf-575q
+    title: Claude Code Action runs MCP servers from a pull request .mcp.json
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code-action/security/advisories/GHSA-8q5r-mmjf-575q
+    source_type: advisory
+    published_date: '2026-06-10'
+    topics:
+    - claude-code
+    - github-actions
+    - mcp
+    supports:
+    - The action checked out attacker-controlled PR head branches, read .mcp.json from the working directory
+      and enabled all project MCP servers. A pull request carrying a malicious .mcp.json could run code
+      on the Actions runner and expose workflow secrets when a privileged user triggered the action on that
+      PR.
+    - 'Affected: anthropics/claude-code-action < 1.0.74. Patched: 1.0.74.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-xrxf-jgv3-qmrm
+    title: OpenAI Codex CLI auto-loads project MCP configuration
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/GHSA-xrxf-jgv3-qmrm
+    source_type: advisory
+    published_date: '2026-04-14'
+    topics:
+    - codex
+    - coding-agents
+    - mcp
+    supports:
+    - Codex CLI 0.23.0 and earlier loaded project-local .env and .codex/config.toml files without confirmation
+      when run inside a repository, so a malicious repository could embed commands that executed immediately
+      through MCP configuration.
+    - 'Affected: @openai/codex <= 0.23.0. Patched: not listed by the reviewed source.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-g8r9-g2v8-jv6f
+    title: GitHub Copilot CLI hidden commands through bash parameter expansion
+    publisher: GitHub
+    url: https://github.com/github/copilot-cli/security/advisories/GHSA-g8r9-g2v8-jv6f
+    source_type: advisory
+    published_date: '2026-03-06'
+    topics:
+    - copilot
+    - coding-agents
+    supports:
+    - The shell safety assessment classified commands using bash parameter transformation operators as read-only.
+      An attacker who could influence agent commands, for example through repository files or MCP server
+      responses, could execute hidden commands.
+    - 'Affected: @github/copilot <= 0.0.422. Patched: 0.0.423.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-xcwh-rrwj-gxc7
+    title: Cursor sensitive file protection bypass by case
+    publisher: Cursor
+    url: https://github.com/cursor/cursor/security/advisories/GHSA-xcwh-rrwj-gxc7
+    source_type: advisory
+    published_date: '2025-10-02'
+    topics:
+    - cursor
+    - coding-agents
+    - mcp
+    supports:
+    - Case-sensitive checks protecting sensitive files such as .cursor/mcp.json let a prompt injection modify
+      them on case-insensitive filesystems and reach remote code execution.
+    - 'Affected: Cursor < 1.6.23 (advisory range). Patched: 1.7.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-xg6w-rmh5-r77r
+    title: Cursor code execution through .code-workspace settings
+    publisher: Cursor
+    url: https://github.com/cursor/cursor/security/advisories/GHSA-xg6w-rmh5-r77r
+    source_type: advisory
+    published_date: '2025-10-02'
+    topics:
+    - cursor
+    - coding-agents
+    supports:
+    - A prompt injection that hijacked chat context could write workspace settings into a .code-workspace
+      file and turn them into code execution.
+    - 'Affected: Cursor < 1.7. Patched: 1.7.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-wj33-264c-j9cq
+    title: Cursor CLI command injection through MCP OAuth
+    publisher: Cursor
+    url: https://github.com/cursor/cursor/security/advisories/GHSA-wj33-264c-j9cq
+    source_type: advisory
+    published_date: '2025-10-02'
+    topics:
+    - cursor
+    - coding-agents
+    - mcp
+    - oauth
+    supports:
+    - When MCP used OAuth with an untrusted server, the server could return crafted commands during the
+      exchange and reach command injection on the host with the user's privileges.
+    - 'Affected: Cursor CLI < 2025.09.17-25b418f. Patched: 2025.09.17-25b418f.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-4575-fh42-7848
+    title: Cursor MCP deep-link install hides the executed command
+    publisher: Cursor
+    url: https://github.com/cursor/cursor/security/advisories/GHSA-4575-fh42-7848
+    source_type: advisory
+    published_date: '2025-11-03'
+    topics:
+    - cursor
+    - coding-agents
+    - mcp
+    supports:
+    - A crafted MCP install deep-link bypassed the warning dialog and showed a trusted server name while
+      running arbitrary commands from the link if the user accepted.
+    - 'Affected: Cursor 1.7.28 (advisory range). Patched: 2.0.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-4hwr-97q3-37w2
+    title: Cursor CLI Beta runs repository MCP configuration without a prompt
+    publisher: Cursor
+    url: https://github.com/cursor/cursor/security/advisories/GHSA-4hwr-97q3-37w2
+    source_type: advisory
+    published_date: '2025-11-03'
+    topics:
+    - cursor
+    - coding-agents
+    - mcp
+    supports:
+    - Opening a cloned repository with Cursor CLI ran the command of a malicious MCP server declared in
+      .cursor/mcp.json without any warning.
+    - 'Affected: Cursor CLI (Beta) < 2025.09.17-25b418f. Patched: 2025.09.17-25b418f.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-cv6g-cmxc-vw8j
+    title: Zed runs MCP servers from project settings on open
+    publisher: Zed Industries
+    url: https://github.com/zed-industries/zed/security/advisories/GHSA-cv6g-cmxc-vw8j
+    source_type: advisory
+    published_date: '2025-12-17'
+    topics:
+    - zed
+    - coding-agents
+    - mcp
+    supports:
+    - Zed loaded MCP context server definitions from a project's .zed/settings.json, so opening a crafted
+      project ran arbitrary commands with the user's privileges without further interaction.
+    - 'Affected: Zed < v0.218.2-pre (including stable v0.217.2). Patched: v0.218.2-pre.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-j975-95f5-7wqh
+    title: MCP Python SDK streamable HTTP crash on client exception
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-j975-95f5-7wqh
+    source_type: advisory
+    published_date: '2025-07-04'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - A client that deliberately triggered an exception after opening a streamable HTTP session could cause
+      an uncaught ClosedResourceError and crash the server until restart.
+    - 'Affected: mcp < 1.10.0. Patched: 1.10.0.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-3qhf-m339-9g5v
+    title: MCP Python SDK FastMCP validation error crash
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-3qhf-m339-9g5v
+    source_type: advisory
+    published_date: '2025-07-04'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - Malformed requests could trigger an unhandled validation exception and leave the server returning
+      500 errors until manually restarted.
+    - 'Affected: mcp < 1.9.4. Patched: 1.9.4.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-w48q-cv73-mx4w
+    title: MCP TypeScript SDK DNS rebinding protection disabled by default
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-w48q-cv73-mx4w
+    source_type: advisory
+    published_date: '2025-12-02'
+    topics:
+    - mcp
+    - npm
+    - dns-rebinding
+    supports:
+    - HTTP-based servers did not enable DNS rebinding protection by default. A localhost server without
+      authentication could receive requests from a malicious website and run tools or read resources on
+      the user's behalf.
+    - 'Affected: @modelcontextprotocol/sdk < 1.24.0. Patched: 1.24.0.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-wvj2-96wp-fq3f
+    title: MCP Go SDK case-insensitive JSON-RPC field matching
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/go-sdk/security/advisories/GHSA-wvj2-96wp-fq3f
+    source_type: advisory
+    published_date: '2026-02-26'
+    topics:
+    - mcp
+    - go
+    supports:
+    - The SDK parsed JSON-RPC with encoding/json, which matches keys case-insensitively and folds some Unicode
+      characters. A malicious peer could send protocol messages with non-standard field names that the SDK
+      still accepted, contrary to JSON-RPC 2.0.
+    - 'Affected: github.com/modelcontextprotocol/go-sdk < 1.3.1. Patched: 1.3.1.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-hv2w-8mjj-jw22
+    title: MCP Java SDK hardcoded wildcard CORS
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/java-sdk/security/advisories/GHSA-hv2w-8mjj-jw22
+    source_type: advisory
+    published_date: '2026-03-30'
+    topics:
+    - mcp
+    - java
+    supports:
+    - 'The servlet SSE and streamable HTTP transports sent Access-Control-Allow-Origin: *, so a page in
+      the victim''s browser could read responses from a reachable MCP server.'
+    - 'Affected: io.modelcontextprotocol.sdk:mcp-core < 0.18.3; = 1.0.0; = 1.1.0. Patched: 0.x: 0.18.3;
+      1.0.x: 1.0.1; 1.1.x: 1.1.1.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-g9hg-qhmf-q45m
+    title: MCP Inspector XSS from an untrusted redirect URL
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/inspector/security/advisories/GHSA-g9hg-qhmf-q45m
+    source_type: advisory
+    published_date: '2025-09-08'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - The Inspector rendered a redirect URL returned by a remote MCP server. A crafted redirect could inject
+      script and, through the built-in proxy, run commands on the developer machine.
+    - 'Affected: @modelcontextprotocol/inspector < 0.16.6. Patched: 0.16.6.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-mxxr-jv3v-6pgc
+    title: FastMCP OAuth client callback reflected XSS
+    publisher: FastMCP maintainers
+    url: https://github.com/PrefectHQ/fastmcp/security/advisories/GHSA-mxxr-jv3v-6pgc
+    source_type: advisory
+    published_date: '2025-10-29'
+    topics:
+    - mcp
+    - pypi
+    - oauth
+    supports:
+    - The callback page served during the client OAuth flow embedded request values such as the error parameter
+      without escaping, allowing reflected cross-site scripting.
+    - 'Affected: fastmcp < 2.13.0. Patched: 2.13.0.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-rj5c-58rq-j5g5
+    title: FastMCP install cursor command injection on Windows
+    publisher: FastMCP maintainers
+    url: https://github.com/PrefectHQ/fastmcp/security/advisories/GHSA-rj5c-58rq-j5g5
+    source_type: advisory
+    published_date: '2025-10-29'
+    topics:
+    - mcp
+    - pypi
+    - windows
+    supports:
+    - fastmcp install cursor placed the server name in a deep-link opened through cmd.exe on Windows, so
+      shell metacharacters in an influenced server name ran arbitrary commands.
+    - 'Affected: fastmcp < 2.13.0. Patched: 2.13.0.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-5h2m-4q8j-pqpj
+    title: FastMCP OAuth Proxy token reuse across MCP servers
+    publisher: FastMCP maintainers
+    url: https://github.com/PrefectHQ/fastmcp/security/advisories/GHSA-5h2m-4q8j-pqpj
+    source_type: advisory
+    published_date: '2026-03-16'
+    topics:
+    - mcp
+    - pypi
+    - oauth
+    supports:
+    - The OAuth Proxy ignored the client's resource parameter and issued tokens for its base_url, so a token
+      obtained for one MCP server could be accepted by another behind the same proxy.
+    - 'Affected: fastmcp < 2.14.2. Patched: 2.14.2.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-m8x7-r2rg-vh5g
+    title: FastMCP install claude-code and gemini-cli command injection on Windows
+    publisher: FastMCP maintainers
+    url: https://github.com/PrefectHQ/fastmcp/security/advisories/GHSA-m8x7-r2rg-vh5g
+    source_type: advisory
+    published_date: '2026-03-31'
+    topics:
+    - mcp
+    - pypi
+    - windows
+    supports:
+    - On Windows the target CLIs often resolve to .cmd wrappers run through cmd.exe, so metacharacters in
+      a server name passed to fastmcp install claude-code or gemini-cli ran commands.
+    - 'Affected: fastmcp < 3.2.0. Patched: 3.2.0.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-w4q6-qw23-4rg7
+    title: GitHub MCP Server unauthenticated crash on completion/complete
+    publisher: GitHub
+    url: https://github.com/github/github-mcp-server/security/advisories/GHSA-w4q6-qw23-4rg7
+    source_type: advisory
+    published_date: '2026-07-28'
+    topics:
+    - mcp
+    - go
+    - denial-of-service
+    supports:
+    - A completion/complete request without a ref field dereferenced nil and crashed the server before authentication,
+      letting any client cause a denial of service.
+    - 'Affected: github.com/github/github-mcp-server < 1.1.0. Patched: 1.1.0.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-v8vw-gw5j-w7m6
+    title: MCP Registry open redirect through a protocol-relative path
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/registry/security/advisories/GHSA-v8vw-gw5j-w7m6
+    source_type: advisory
+    published_date: '2026-05-08'
+    topics:
+    - mcp
+    - go
+    supports:
+    - The trailing-slash middleware redirected //evil.com/ to //evil.com, which browsers treat as an external
+      URL.
+    - 'Affected: github.com/modelcontextprotocol/registry >= 1.1.0, < 1.7.5. Patched: 1.7.5.'
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-cve-2025-34072
+    title: Deprecated Slack MCP server leaks data through link unfurling
+    publisher: GitHub Advisory Database (unreviewed)
+    url: https://github.com/advisories/GHSA-gmx5-crwh-6vxg
+    source_type: database
+    published_date: '2025-07-02'
+    topics:
+    - mcp
+    - npm
+    - data-exfiltration
+    supports:
+    - The unreviewed advisory states that an agent using Anthropic's deprecated Slack MCP server could be
+      led by untrusted data to post links embedding private data, which Slack preview bots then fetched
+      from the attacker's URL without user interaction. No fixed version is listed.
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-cve-2026-19591
+    title: Codex approval bypass through the PowerShell stop-parsing token
+    publisher: GitHub Advisory Database (unreviewed)
+    url: https://github.com/advisories/GHSA-2frj-4qr5-m2rf
+    source_type: database
+    published_date: '2026-09-01'
+    topics:
+    - codex
+    - coding-agents
+    - mcp
+    - windows
+    supports:
+    - The unreviewed advisory states that Codex treated some PowerShell commands using --% as safe, so an
+      attacker-prepared repository could get a file-writing Git command run without approval and alter Codex
+      configuration to launch an attacker MCP server. The default macOS and Linux filesystem sandbox can
+      block the write. The advisory links a fix pull request but no version.
+    reviewed_date: '2026-11-03'
+    status: active
+  - id: review-2026-11-ghsa-5j29-h97v-84ch
+    title: Claude Code write-time symlink following outside the project
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/security/advisories/GHSA-5j29-h97v-84ch
+    source_type: advisory
+    published_date: '2026-10-05'
+    topics:
+    - claude-code
+    - coding-agents
+    supports:
+    - Claude Code checked that a target path was inside the project at permission time but re-resolved it
+      at write time. An attacker with write access to a shared workspace who won the race could swap a project
+      file for a symlink and redirect the write outside the project.
+    - 'Affected: @anthropic-ai/claude-code < 2.1.129. Patched: 2.1.129.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-pq7j-f95f-qfcv
+    title: Claude Code plugin commit SHA pin bypass
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/security/advisories/GHSA-pq7j-f95f-qfcv
+    source_type: advisory
+    published_date: '2026-10-09'
+    topics:
+    - claude-code
+    - plugins
+    supports:
+    - The plugin install flow ran git checkout on a pinned commit SHA without checking that HEAD matched
+      it. A plugin upstream could create a branch named like the 40-character SHA so the install resolved
+      to attacker-controlled code.
+    - 'Affected: @anthropic-ai/claude-code < 2.1.179. Patched: 2.1.179.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-4p2j-qj3c-6x84
+    title: Claude Desktop Windows git executable search path
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/security/advisories/GHSA-4p2j-qj3c-6x84
+    source_type: advisory
+    published_date: '2026-10-13'
+    topics:
+    - claude-desktop
+    - windows
+    supports:
+    - Claude Desktop on Windows launched git.exe without an absolute path, so the current working directory
+      was searched first. A git.exe placed in a project directory ran when the user opened that directory.
+    - 'Affected: Claude Desktop < 1.8089.0. Patched: 1.8089.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-5xjx-9qx6-jcrv
+    title: Claude Code Edit tool directory swap outside the workspace
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/security/advisories/GHSA-5xjx-9qx6-jcrv
+    source_type: advisory
+    published_date: '2026-10-26'
+    topics:
+    - claude-code
+    - sandbox
+    supports:
+    - Edit targets were validated with point-in-time path resolution. On macOS, code running inside the
+      Bash sandbox could swap an in-workspace parent directory for a symlink after validation, making the
+      unsandboxed Edit write a user-writable file outside the workspace.
+    - 'Affected: @anthropic-ai/claude-code < 2.1.251. Patched: 2.1.251.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-h4mw-j7qp-8mwm
+    title: Claude Agent SDK for Python resume option argument injection
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-agent-sdk-python/security/advisories/GHSA-h4mw-j7qp-8mwm
+    source_type: advisory
+    published_date: '2026-09-12'
+    topics:
+    - claude-agent-sdk
+    - pypi
+    supports:
+    - The SDK passed the resume option to the Claude CLI without validation. A value starting with a dash
+      could inject --mcp-config with a stdio MCP server and run a command at CLI startup, bypassing the
+      SDK permission controls.
+    - 'Affected: claude-agent-sdk < 0.2.121. Patched: 0.2.121.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-w4fh-qvv9-3v23
+    title: MCP Python bearer authentication accepts tokens for another resource
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-w4fh-qvv9-3v23
+    source_type: advisory
+    published_date: '2026-10-05'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - Server bearer authentication could not check a token's audience. Where one authorization server issues
+      tokens for several services, a token for another service was accepted.
+    - 'Affected: mcp >= 1.10.0, < 1.30.0; >= 2.0.0, < 2.2.0. Patched: 1.x: 1.30.0; 2.x: 2.2.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-f897-62hf-6gxq
+    title: MCP TypeScript HTTP servers without body size or batch limits
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-f897-62hf-6gxq
+    source_type: advisory
+    published_date: '2026-10-15'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - HTTP-reachable servers did not limit POST body size or JSON-RPC batch length, so large requests could
+      exhaust memory and one long batch could block the server. stdio servers are excluded.
+    - 'Affected: @modelcontextprotocol/sdk >= 1.10.0, < 1.30.1; @modelcontextprotocol/server >= 2.0.0, <
+      2.1.0; @modelcontextprotocol/node >= 2.0.0, < 2.1.0; @modelcontextprotocol/hono >= 2.0.0, < 2.0.1.
+      Patched: sdk 1.x: 1.30.1; server and node 2.x: 2.1.0; hono: 2.0.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-jm63-cq47-j5jp
+    title: MCP TypeScript shared server instances cross-deliver client messages
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-jm63-cq47-j5jp
+    source_type: advisory
+    published_date: '2026-10-15'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - Messages were matched to connections by JSON-RPC id alone. When clients shared one stateless transport
+      or one server instance, one client's responses and notifications could reach another client.
+    - 'Affected: @modelcontextprotocol/server >= 2.0.0, < 2.3.0. Patched: 2.3.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-46jr-4wx8-v453
+    title: MCP TypeScript tool input validation memory exhaustion
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-46jr-4wx8-v453
+    source_type: advisory
+    published_date: '2026-10-15'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - Servers did not limit how many array elements and object keys they validated in one request, so one
+      HTTP request inside the default 4 MiB limit could exhaust the heap.
+    - 'Affected: @modelcontextprotocol/sdk >= 1.3.0, < 1.32.0; @modelcontextprotocol/server >= 2.0.0, <
+      2.3.0. Patched: sdk 1.x: 1.32.0; server 2.x: 2.3.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-rvq5-wwqv-78pq
+    title: MCP TypeScript bearer authentication accepts tokens for another service
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-rvq5-wwqv-78pq
+    source_type: advisory
+    published_date: '2026-10-05'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - requireBearerAuth() and verifyBearerToken() could not check a token's audience, so a token issued
+      for another service by the same authorization server was accepted.
+    - 'Affected: @modelcontextprotocol/sdk >= 1.6.0, < 1.32.0; @modelcontextprotocol/server >= 2.0.0, <
+      2.3.0; @modelcontextprotocol/express >= 2.0.0, < 2.0.2; @modelcontextprotocol/server-legacy >= 2.0.0,
+      < 2.3.1. Patched: sdk 1.x: 1.32.0; server 2.x: 2.3.0; express: 2.0.2; server-legacy: 2.3.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-7xgj-8392-5q4r
+    title: FastMCP post-transform component authorization skipped
+    publisher: FastMCP maintainers
+    url: https://github.com/PrefectHQ/fastmcp/security/advisories/GHSA-7xgj-8392-5q4r
+    source_type: advisory
+    published_date: '2026-10-20'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - Direct lookups checked the original component's authorization policy but returned the transformed
+      component without rechecking it, so a client knowing the identifier could call a denied tool or read
+      a denied resource or prompt.
+    - 'Affected: fastmcp and fastmcp-slim >= 3.0.0, < 3.4.10; >= 4.0.0, < 4.1.2. Patched: 3.x: 3.4.10; 4.x:
+      4.1.2.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-vqqp-x5qm-5qp4
+    title: FastMCP client credentials providers without issuer binding
+    publisher: FastMCP maintainers
+    url: https://github.com/PrefectHQ/fastmcp/security/advisories/GHSA-vqqp-x5qm-5qp4
+    source_type: advisory
+    published_date: '2026-10-20'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - The client credentials and private-key JWT providers did not bind pre-registered credentials to their
+      issuer, so an untrusted MCP server could advertise another authorization server and receive the client
+      secret or a signed assertion.
+    - 'Affected: fastmcp and fastmcp-slim >= 4.0.0a1, < 4.1.2. Patched: 4.1.2.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-q344-5v34-gm84
+    title: pdf-reader-mcp HTTP transport ignores MCP_API_KEY
+    publisher: SylphxAI maintainers
+    url: https://github.com/SylphxAI/anymd/security/advisories/GHSA-q344-5v34-gm84
+    source_type: advisory
+    published_date: '2026-06-25'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - With MCP_TRANSPORT=http the server logged that API key authentication was enabled but never checked
+      X-API-Key. Bound to 0.0.0.0 by default, it let any reachable client call every tool and read any PDF
+      the process could open.
+    - 'Affected: @sylphx/pdf-reader-mcp >= 2.2.0, < 3.0.1. Patched: 3.0.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-4mfg-r38w-w8fg
+    title: mcp-sanitizer URL validation loopback SSRF bypass
+    publisher: mcp-sanitizer maintainer
+    url: https://github.com/starman69/mcp-sanitizer/security/advisories/GHSA-4mfg-r38w-w8fg
+    source_type: advisory
+    published_date: '2026-06-25'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - The URL sanitizer did not block localhost with an explicit port or bracketed IPv6 loopback and link-local
+      addresses, so URLs passed to MCP fetch tools could reach internal services.
+    - 'Affected: mcp-sanitizer < 1.4.0. Patched: 1.4.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-7w82-6f9j-v9jp
+    title: mcp-sanitizer file path validation allows user-home paths
+    publisher: mcp-sanitizer maintainer
+    url: https://github.com/starman69/mcp-sanitizer/security/advisories/GHSA-7w82-6f9j-v9jp
+    source_type: advisory
+    published_date: '2026-06-25'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - The file path sanitizer allowlisted /home/ and /Users/ absolute prefixes, so paths to SSH keys or
+      cloud credentials outside the configured safe roots were reported as not blocked.
+    - 'Affected: mcp-sanitizer < 1.4.0. Patched: 1.4.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-c8r8-95hg-mp34
+    title: SiYuan MCP file tool blocklist narrower than the HTTP file API
+    publisher: SiYuan maintainers
+    url: https://github.com/siyuan-note/siyuan/security/advisories/GHSA-c8r8-95hg-mp34
+    source_type: advisory
+    published_date: '2026-08-08'
+    topics:
+    - mcp
+    - siyuan
+    supports:
+    - The MCP file tool blocked only conf/conf.json while the HTTP file API also blocks snippet configuration,
+      templates and publish access data, exposing publish-mode passwords and other sensitive workspace files.
+    - 'Affected: SiYuan kernel before commit 3542530c505f (v3.8.0). Patched: 3.8.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-953h-535j-jg2v
+    title: agent-router MCP session resume skips caller binding
+    publisher: agent-router maintainers
+    url: https://github.com/theagentrouter/agent-router/security/advisories/GHSA-953h-535j-jg2v
+    source_type: advisory
+    published_date: '2026-10-07'
+    topics:
+    - mcp
+    - gateway
+    supports:
+    - Session IDs embedded the caller's JWT subject but resume never compared it with the current caller.
+      The Helm chart also shipped a public default seed, making session IDs forgeable.
+    - 'Affected: github.com/envoyproxy/ai-gateway >= 0.4.0-rc1, < 1.2.0-rc1. Patched: 1.2.0-rc1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-vqff-r82h-9crc
+    title: ckan-mcp-server DataStore UI postMessage without origin checks
+    publisher: ckan-mcp-server maintainers
+    url: https://github.com/ondata/ckan-mcp-server/security/advisories/GHSA-vqff-r82h-9crc
+    source_type: advisory
+    published_date: '2026-07-09'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - The DataStore table UI accepted postMessage data without checking event.origin and sent its JSON-RPC
+      messages with target origin '*'.
+    - 'Affected: @aborruso/ckan-mcp-server < 0.4.112. Patched: 0.4.112.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-vc32-4gwf-77xp
+    title: nginx-ui MCP endpoints bypass OTP step-up
+    publisher: nginx-ui maintainers
+    url: https://github.com/0xJacky/nginx-ui/security/advisories/GHSA-vc32-4gwf-77xp
+    source_type: advisory
+    published_date: '2026-07-17'
+    topics:
+    - mcp
+    - nginx-ui
+    supports:
+    - Configuration mutation over HTTP required a secure OTP session, but /mcp and /mcp_message only required
+      ordinary authentication and exposed nginx_config_add and nginx_config_modify.
+    - 'Affected: nginx-ui before v2.4.1 (Go pseudo-version 1.9.10-0.20260703131214-23d1934099b0). Patched:
+      2.4.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-9jww-cxg5-rj9m
+    title: nginx-ui MCP nginx_config_add skips directive validation
+    publisher: nginx-ui maintainers
+    url: https://github.com/0xJacky/nginx-ui/security/advisories/GHSA-9jww-cxg5-rj9m
+    source_type: advisory
+    published_date: '2026-07-17'
+    topics:
+    - mcp
+    - nginx-ui
+    supports:
+    - nginx_config_add wrote configuration and reloaded nginx without ValidateConfigFile, unlike the REST
+      API, so an authenticated caller could add blocked directives such as perl or js_import.
+    - 'Affected: nginx-ui from Go pseudo-version 1.9.10-0.20250506154222-1330888280a2 before v2.4.1. Patched:
+      2.4.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-76pm-mq2q-9gcr
+    title: nginx-ui MCP config add allows blocked directive injection
+    publisher: nginx-ui maintainers
+    url: https://github.com/0xJacky/nginx-ui/security/advisories/GHSA-76pm-mq2q-9gcr
+    source_type: advisory
+    published_date: '2026-07-17'
+    topics:
+    - mcp
+    - nginx-ui
+    supports:
+    - One of four configuration write paths, the MCP nginx_config_add tool, did not call the directive blocklist,
+      so an authenticated caller or a prompt-injected agent could reach nginx code execution where njs or
+      perl modules are available.
+    - 'Affected: nginx-ui before v2.4.1 (Go pseudo-version 1.9.10-0.20260703131214-23d1934099b0). Patched:
+      2.4.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-5r62-gj48-897x
+    title: nginx-ui MCP config tools let secondary users run NJS
+    publisher: nginx-ui maintainers
+    url: https://github.com/0xJacky/nginx-ui/security/advisories/GHSA-5r62-gj48-897x
+    source_type: advisory
+    published_date: '2026-07-17'
+    topics:
+    - mcp
+    - nginx-ui
+    supports:
+    - A secondary authenticated user could write restricted directives through the MCP interface, load the
+      njs module and execute attacker-controlled NJS in the nginx worker. The advisory states this is not
+      OS command execution by itself.
+    - 'Affected: nginx-ui before v2.4.1 (Go pseudo-version 1.9.10-0.20260703131214-23d1934099b0). Patched:
+      2.4.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-w794-rj3p-xv45
+    title: Langflow MCP stdio server configuration runs arbitrary commands
+    publisher: Langflow maintainers
+    url: https://github.com/langflow-ai/langflow/security/advisories/GHSA-w794-rj3p-xv45
+    source_type: advisory
+    published_date: '2026-09-28'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - The MCP stdio transport launched any command and arguments placed in an MCP server configuration,
+      without an allowlist. Users able to edit MCP server settings or build a flow with MCP Tools could
+      run OS commands on the Langflow host.
+    - 'Affected: langflow >= 1.1.2, < 1.10.3; langflow-base >= 0.1.2, < 0.10.3; lfx < 1.10.3. Patched: langflow
+      1.10.3; langflow-base 0.10.3; lfx 1.10.3.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-4hmc-cfm3-w43c
+    title: Langflow project MCP resources read other users' files
+    publisher: Langflow maintainers
+    url: https://github.com/langflow-ai/langflow/security/advisories/GHSA-4hmc-cfm3-w43c
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - The project MCP transport authenticated the caller for its project but resources/read did not authorize
+      the requested URI, so a user could read files from other users' flows.
+    - 'Affected: langflow >= 1.6.8, <= 1.9.0. Patched: 1.9.1.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-hc5v-gxvj-58wh
+    title: PraisonAI MCP HTTP-stream server unauthenticated by default
+    publisher: PraisonAI maintainers
+    url: https://github.com/MervinPraison/PraisonAI/security/advisories/GHSA-hc5v-gxvj-58wh
+    source_type: advisory
+    published_date: '2026-06-25'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - praisonai mcp serve --transport http-stream defaulted to no API key, exposing initialize and tools/list
+      without authentication, and tool arguments were not checked against inputSchema. The advisory says
+      workflow execution and file read were refuted on 4.6.63.
+    - 'Affected: praisonai <= 4.6.77. Patched: 4.6.78.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-2q76-m6w6-qgc6
+    title: Payload MCP plugin API key management outside the user's account
+    publisher: Payload maintainers
+    url: https://github.com/payloadcms/payload/security/advisories/GHSA-2q76-m6w6-qgc6
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - Under certain conditions an authenticated user could manage MCP API keys outside their account and
+      take over other accounts. Applications without the MCP plugin are not affected.
+    - 'Affected: @payloadcms/plugin-mcp >= 3.61.0, < 3.88.0. Patched: 3.88.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-737x-cwfr-5vvc
+    title: obsidian-tc declined human confirmation still permits destructive calls
+    publisher: obsidian-tc maintainers
+    url: https://github.com/The-40-Thieves/obsidian-tc/security/advisories/GHSA-737x-cwfr-5vvc
+    source_type: advisory
+    published_date: '2026-09-26'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - On Streamable HTTP with jwtSecret set, a destructive tool call that asked for elicitation confirmation
+      could still complete after the human declined, cancelled or omitted the answer, because the server
+      treated a valid requestState as approval.
+    - 'Affected: obsidian-tc >= 1.13.0, <= 1.31.3. Patched: 1.31.4.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-r57g-mc79-8hj2
+    title: djust MCP tool reads arbitrary absolute paths
+    publisher: djust maintainers
+    url: https://github.com/djust-org/djust/security/advisories/GHSA-r57g-mc79-8hj2
+    source_type: advisory
+    published_date: '2026-10-15'
+    topics:
+    - mcp
+    - pypi
+    supports:
+    - The find_handlers_for_template MCP tool accepted any absolute filesystem path and read the file.
+    - 'Affected: djust >= 0.9.0, <= 1.0.9; >= 1.1.0, <= 1.1.6; >= 1.2.0.dev0, <= 1.2.3; >= 1.3.0.dev0, <=
+      1.3.0rc7. Patched: 1.0.10; 1.1.7; 1.2.4; 1.3.0rc8.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-39w2-rjm5-chcv
+    title: Next.js development server MCP endpoint without origin check
+    publisher: Vercel
+    url: https://github.com/vercel/next.js/security/advisories/GHSA-39w2-rjm5-chcv
+    source_type: advisory
+    published_date: '2026-09-30'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - next dev exposed an MCP endpoint that did not verify the requesting origin, so a website visited by
+      the developer could read the project path, source snippets, routes and development logs. Production
+      deployments do not serve it.
+    - 'Affected: next >= 16.0.0, < 16.3.8. Patched: 16.3.8.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-ghsa-5hw5-4q87-m6x9
+    title: chrome-devtools-mcp roots bypass through extension-rewritten paths
+    publisher: Chrome DevTools maintainers
+    url: https://github.com/ChromeDevTools/chrome-devtools-mcp/security/advisories/GHSA-5hw5-4q87-m6x9
+    source_type: advisory
+    published_date: '2026-10-22'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - Output paths were checked against MCP roots before the file extension was rewritten, so an in-root
+      symlink with the rewritten name could make tools overwrite a file outside the roots.
+    - 'Affected: chrome-devtools-mcp >= 1.1.0, <= 1.4.0. Patched: 1.5.0.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-cve-2026-111091
+    title: JetBrains Junie CLI runs untrusted project MCP configuration
+    publisher: JetBrains (CVE record)
+    url: https://www.cve.org/CVERecord?id=CVE-2026-111091
+    source_type: database
+    published_date: '2026-10-15'
+    topics:
+    - junie
+    - coding-agents
+    supports:
+    - The vendor CVE record states that code execution was possible via an untrusted project's MCP server
+      configuration.
+    - 'Affected: Junie CLI < 26.8.3. Patched: 26.8.3.'
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-cve-2026-88755
+    title: Z.ai ZCode connects to repository-declared MCP servers
+    publisher: NVD
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-88755
+    source_type: database
+    published_date: '2026-10-16'
+    topics:
+    - zcode
+    - coding-agents
+    supports:
+    - The CVE record states that ZCode v3.11.2.6792 automatically connected to MCP servers declared in a
+      repository workspace configuration, possibly allowing code execution when a crafted repository is
+      opened. The record cites a researcher proof of concept; no vendor advisory or fix was found.
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-cve-2026-108714
+    title: MCP Kotlin SDK WebSocket frame size memory exhaustion
+    publisher: NVD
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-108714
+    source_type: database
+    published_date: '2026-10-11'
+    topics:
+    - mcp
+    - kotlin
+    supports:
+    - The CVE record states that MCP Kotlin SDK through 0.15.0 installs Ktor WebSockets without a maxFrameSize
+      limit in Application.mcpWebSocket, so clients can force near 2 GiB allocations. No maintainer advisory
+      or fixed version was found.
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-cve-2026-108859
+    title: mcp-go Streamable HTTP server buffers unbounded POST bodies
+    publisher: NVD
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-108859
+    source_type: database
+    published_date: '2026-10-11'
+    topics:
+    - mcp
+    - go
+    supports:
+    - The CVE record states that mcp-go through 1.2.1 reads Streamable HTTP POST bodies with io.ReadAll
+      before validation, so unauthenticated clients can exhaust memory. No maintainer advisory or fixed
+      version was found.
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-11-cve-2026-108716
+    title: mcp-remote device-code flow accepts cleartext endpoints
+    publisher: NVD
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-108716
+    source_type: database
+    published_date: '2026-10-11'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - The CVE record states that mcp-remote 0.8.0 through 0.14.3 sends the client secret and receives tokens
+      over non-loopback http device authorization and token endpoints. No maintainer advisory or fixed version
+      was found.
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: cursor-claude-code-extension-notice-2026-10
+    title: 'Security notice: malicious version of Anthropic.claude-code identified in the Cursor VS Code
+      Extension Marketplace'
+    publisher: Cursor
+    url: https://cursor.com/blog/claude-code-extension-security-notice
+    source_type: advisory
+    published_date: '2026-10-29'
+    topics:
+    - cursor
+    - vscode-extensions
+    - supply-chain
+    supports:
+    - Modified Anthropic.claude-code 2.1.312 and 2.1.313 builds for macOS and Windows were served by the
+      Cursor VS Code Extension Marketplace between about 2:27am and 1:35pm PT on October 29, 2026.
+    - The builds were not developed by Anthropic. Cursor removed them, rebuilt the marketplace, rotated
+      keys and published detection and remediation steps.
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: microsoft-claude-code-branded-extension-2026-10
+    title: Inside a malicious Claude Code-branded extension and its persistent SSH backdoor
+    publisher: Microsoft Threat Intelligence
+    url: https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/
+    source_type: research
+    published_date: '2026-10-30'
+    topics:
+    - cursor
+    - vscode-extensions
+    - supply-chain
+    supports:
+    - The injected loader runs when the extension module loads and attempts to add an attacker SSH key,
+      enable SSH, open reverse forwarding, configure persistence and report host details.
+    - Microsoft states the packages were not distributed from the Visual Studio Marketplace or npm @anthropic-ai/claude-code
+      and that the evidence limits the incident to the Cursor marketplace.
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: jfrog-testmetest-armed-repositories-2026-10
+    title: 'Beyond testmetest: native addon camouflage and 42 hijacked GitHub repositories'
+    publisher: JFrog Security Research
+    url: https://research.jfrog.com/post/beyond-testmetest-42-hijacked-github-repos/
+    source_type: research
+    published_date: '2026-10-26'
+    topics:
+    - supply-chain
+    - npm
+    - coding-agents
+    supports:
+    - 42 third-party GitHub repositories across 11 owners carried a 12.9 to 13.7 MB .github/init.js wrapper
+      connected to the testmetest npm campaign.
+    - The repositories contained execution triggers in .claude/settings.json (SessionStart), .gemini/settings.json,
+      .cursor/mcp.json, .cursor/rules/setup.mdc and .vscode/tasks.json.
+    reviewed_date: '2026-11-02'
+    status: active
+  - id: review-2026-10-ghsa-3cj3-hqcr-g934
+    title: Cline Hub dashboard cross-origin WebSocket hijack
+    publisher: Cline maintainers
+    url: https://github.com/cline/cline/security/advisories/GHSA-3cj3-hqcr-g934
+    source_type: advisory
+    published_date: '2026-06-23'
+    topics:
+    - cline
+    - coding-agents
+    supports:
+    - The local dashboard accepted browser WebSocket connections without Origin validation when ROOM_SECRET
+      was unset. Such clients could alter MCP or provider settings and trigger agent commands when a
+      provider and model were configured.
+    - 'Affected: cline <= 3.0.24. Patched: not listed by the reviewed upstream advisory.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-6prh-2h8m-c8cw
+    title: MCP TypeScript cross-origin redirect credential disclosure
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-6prh-2h8m-c8cw
+    source_type: advisory
+    published_date: '2026-10-02'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - HTTP transports and OAuth requests forwarded custom headers and session IDs across origins; 307/308
+      redirects also re-sent bodies containing OAuth credentials. Current fetch runtimes already remove
+      the Authorization header.
+    - 'Affected: @modelcontextprotocol/sdk < 1.32.0; @modelcontextprotocol/client >= 2.0.0, < 2.3.0.
+      Patched: sdk 1.x: 1.32.0; client 2.x: 2.3.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-22jm-h49p-29qw
+    title: MCP TypeScript experimental task cross-session access
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-22jm-h49p-29qw
+    source_type: advisory
+    published_date: '2026-10-02'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - HTTP clients sharing an InMemoryTaskStore could list, read or cancel tasks created by other sessions.
+      Exposure requires a configured taskStore; 2.x packages are excluded.
+    - 'Affected: @modelcontextprotocol/sdk >= 1.24.0, < 1.32.0. Patched: 1.32.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-6qxp-vccf-f47h
+    title: MCP TypeScript OAuth credential issuer confusion
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/typescript-sdk/security/advisories/GHSA-6qxp-vccf-f47h
+    source_type: advisory
+    published_date: '2026-09-30'
+    topics:
+    - mcp
+    - npm
+    supports:
+    - OAuth credentials were not bound to the authorization server that owned them. An untrusted MCP
+      server could redirect saved refresh tokens, client secrets or signed assertions to another issuer.
+    - 'Affected: @modelcontextprotocol/sdk >= 1.12.0, < 1.31.0; @modelcontextprotocol/client >= 2.0.0,
+      < 2.2.0. Patched: sdk 1.x: 1.31.0; client 2.x: 2.2.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-8g28-rj54-p5p2
+    title: AWS Security Agent MCP diff reference argument injection
+    publisher: Amazon Web Services
+    url: https://github.com/awslabs/mcp/security/advisories/GHSA-8g28-rj54-p5p2
+    source_type: advisory
+    published_date: '2026-10-01'
+    topics:
+    - mcp
+    - python
+    - aws
+    supports:
+    - A caller-influenced diff revision could be interpreted as a Git option, allowing writes outside
+      the workspace within server-process privileges. Repository-influenced output could lead to execution;
+      the operation could report no diff.
+    - 'Affected: awslabs.security-agent-mcp-server >= 0.1.1, < 0.2.0. Patched: 0.2.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-5h93-6whr-6q8j
+    title: MCP Python cross-origin redirect credential disclosure
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-5h93-6whr-6q8j
+    source_type: advisory
+    published_date: '2026-10-02'
+    topics:
+    - mcp
+    - python
+    supports:
+    - HTTP client transports and OAuth requests followed cross-origin redirects carrying custom headers
+      and, for 307/308, request bodies. The HTTP library dropped a lone Authorization header across
+      origins.
+    - 'Affected: mcp >= 1.8.0, < 1.30.0; >= 2.0.0, < 2.2.0. Patched: 1.x: 1.30.0; 2.x: 2.2.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-fmmv-w9g8-j3gc
+    title: MCP Python HTTP request body memory exhaustion
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-fmmv-w9g8-j3gc
+    source_type: advisory
+    published_date: '2026-09-30'
+    topics:
+    - mcp
+    - python
+    supports:
+    - HTTP transports and OAuth routes read request bodies without a shared size limit. Streamable HTTP
+      received an earlier partial limit; the later fix covered SSE message and OAuth routes.
+    - 'Affected: mcp < 1.29.1; >= 2.0.0, < 2.1.0. Patched: 1.x: 1.29.1; 2.x: 2.1.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-84m7-p3x7-pcfv
+    title: MCP Python stateful HTTP session memory exhaustion
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-84m7-p3x7-pcfv
+    source_type: advisory
+    published_date: '2026-09-30'
+    topics:
+    - mcp
+    - python
+    supports:
+    - Default stateful Streamable HTTP sessions retained initialize payloads without bounded session
+      counts or reclamation, including ended or refused sessions. Reachable clients could exhaust server
+      memory.
+    - 'Affected: mcp >= 1.8.0, < 1.30.0; >= 2.0.0, < 2.2.0. Patched: 1.x: 1.30.0; 2.x: 2.2.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-qx49-fqc8-xw99
+    title: MCP Python OAuth authorization-server credential confusion
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-qx49-fqc8-xw99
+    source_type: advisory
+    published_date: '2026-09-28'
+    topics:
+    - mcp
+    - python
+    supports:
+    - An untrusted MCP server could select where an OAuth client sent credentials because issuer validation
+      and credential binding were incomplete. stdio clients, clients attaching their own headers and
+      SDK servers are excluded.
+    - 'Affected: mcp >= 1.9.1, < 1.30.0; >= 2.0.0a1, < 2.2.0. Patched: 1.x: 1.30.0; 2.x: 2.2.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-rwrf-2pqf-9j8j
+    title: MCP Python client external schema reference fetch
+    publisher: Model Context Protocol maintainers
+    url: https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-rwrf-2pqf-9j8j
+    source_type: advisory
+    published_date: '2026-09-28'
+    topics:
+    - mcp
+    - python
+    supports:
+    - Tool output-schema validation resolved server-chosen external references through synchronous URL
+      or local-file reads without a timeout. Retrieved content was used as a schema and was not returned
+      to the server; a stalled fetch could block the event loop.
+    - 'Affected: mcp >= 1.10.0, < 1.30.0; >= 2.0.0, < 2.2.0. Patched: 1.x: 1.30.0; 2.x: 2.2.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-gfvf-j8jh-jxxw
+    title: Stored API key prevents server-managed policy refresh
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/security/advisories/GHSA-gfvf-j8jh-jxxw
+    source_type: advisory
+    published_date: '2026-09-29'
+    topics:
+    - claude-code
+    supports:
+    - A stored API key was preferred when fetching server-managed settings despite Enterprise or Team
+      session sign-in. Rejection could leave no server policy or an older cached copy; endpoint-managed
+      settings were unaffected.
+    - 'Affected: Enterprise >= 2.0.68, < 2.1.260; Team >= 2.1.38, < 2.1.260. Patched: 2.1.260.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-10-ghsa-v234-4jrq-mgg6
+    title: Cowork macOS file-open host execution
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/security/advisories/GHSA-v234-4jrq-mgg6
+    source_type: advisory
+    published_date: '2026-09-25'
+    topics:
+    - cowork
+    - macos
+    supports:
+    - An omitted executable file type allowed content from a Cowork shared folder to run commands on
+      macOS when opened from Claude Desktop. A separate guest-kernel flaw could remove the user-interaction
+      requirement on older VM images.
+    - 'Affected: Claude Desktop >= 1.1.3918, < 1.15962.0. Patched: 1.15962.0.'
+    reviewed_date: '2026-10-04'
+    status: active
+  - id: review-2026-09-cve-2026-90999
+    title: Sentry Seer fabricated-event code execution
+    publisher: CERT/CC
+    url: https://www.kb.cert.org/vuls/id/212479
+    source_type: advisory
+    published_date: '2026-09-16'
+    topics:
+    - agent-security
+    supports:
+    - CERT/CC describes untrusted public-DSN events becoming coding-agent instructions when automatic
+      remediation is enabled, leading to execution in the agent environment and access to connected
+      repositories.
+    - 'Reviewed remediation: Pause automatic coding-agent handoff, restrict package installation and
+      scope repository credentials while awaiting vendor remediation.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: review-2026-09-advisory-plugin4shell-2026-001
+    title: Plugin4Shell plugin pin verification bypass
+    publisher: AIR Security
+    url: https://www.air.security/blog-posts/plugin4shell
+    source_type: research
+    published_date: '2026-09-17'
+    topics:
+    - agent-security
+    supports:
+    - AIR reports plugin checkout can resolve an attacker-controlled default branch instead of the
+      reviewed commit. The SHA-shaped branch variant depends on Git host rules; Gemini uses a FETCH_HEAD
+      variant.
+    - 'Reviewed remediation: AIR reports fixes in Claude Code 2.1.179 and Codex 0.146.0. For other
+      affected installers, verify current vendor guidance or disable affected plugin updates.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: review-2026-09-advisory-codex-2026-001
+    title: Overpatch sandbox write-boundary escape
+    publisher: Accomplish AI
+    url: https://www.accomplish.ai/blog/escaping-the-openai-codex-sandbox-twice/
+    source_type: research
+    published_date: '2026-09-15'
+    topics:
+    - agent-security
+    supports:
+    - Accomplish reported that attacker-controlled patch paths could expand write authorization beyond
+      the Codex workspace. The researcher identifies CLI 0.149.0 as fixed.
+    - 'Reviewed remediation: Update Codex CLI to 0.149.0 or later.'
+    - Accomplish reported that a Desktop-installed JavaScript helper exposed a privileged trust token
+      within shared memory, enabling host execution even in read-only mode. The researcher identifies
+      Desktop build 26.818.21641 as fixed.
+    - 'Reviewed remediation: Update Codex Desktop to build 26.818.21641 or later; a CLI-only update
+      does not establish that the Desktop helper is patched.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: review-2026-09-advisory-cc-2026-004
+    title: Claude Code late-September permission fixes
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md
+    source_type: maintainer
+    published_date: '2026-09-23'
+    topics:
+    - agent-security
+    supports:
+    - Releases through 2.1.281 correct symlink write checks, workspace trust before background hooks,
+      inherited setting restrictions, NUL permission rules and managed MCP handling.
+    - 'Reviewed remediation: Update Claude Code to 2.1.281 or later and review trust, permission and
+      managed MCP settings.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-5648-rgj9-v224
+    title: 'GHSA-5648-rgj9-v224: @zereight/mcp-gitlab'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-5648-rgj9-v224
+    source_type: advisory
+    published_date: '2026-09-15'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - GraphQL operations can bypass read-only and project filters. Other findings concern deployment-dependent
+      transport authentication, session exhaustion and untrusted CI logs.
+    - 'Advisory metadata lists @zereight/mcp-gitlab < 2.1.30; patched: 2.1.30.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-vmp7-252j-cwp7
+    title: 'CVE-2026-61568: @zereight/mcp-gitlab'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-vmp7-252j-cwp7
+    source_type: advisory
+    published_date: '2026-09-15'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Streamable HTTP accepts attacker-origin browser traffic at initialization. In remote-authorization
+      mode, tool listing and GitLab calls still require a token; the advisory does not establish a
+      tokenless takeover in that mode.
+    - 'Advisory metadata lists @zereight/mcp-gitlab < 2.1.30; patched: 2.1.30.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-2h44-8472-frjj
+    title: 'CVE-2026-61559: @zereight/mcp-gitlab'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-2h44-8472-frjj
+    source_type: advisory
+    published_date: '2026-09-15'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - With ENABLE_DYNAMIC_API_URL=true, an HTTP caller can redirect credential-bearing GitLab requests
+      through X-GitLab-API-URL to an untrusted destination.
+    - 'Advisory metadata lists @zereight/mcp-gitlab >= 0.0.1, < 2.1.27; patched: 2.1.27.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-cv3r-c5h8-f4g5
+    title: 'CVE-2026-61560: @zereight/mcp-gitlab'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-cv3r-c5h8-f4g5
+    source_type: advisory
+    published_date: '2026-09-16'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - An exposed SSE transport and unrestricted upload_markdown path can disclose server-readable files,
+      including GitLab tokens, to a reachable GitLab project.
+    - 'Advisory metadata lists @zereight/mcp-gitlab < 2.1.27; patched: 2.1.27.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-qg2g-g9w3-m5h8
+    title: 'CVE-2026-58197: github.com/stacklok/toolhive'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-qg2g-g9w3-m5h8
+    source_type: advisory
+    published_date: '2026-09-18'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - A compromised MCP container using the default permissive network profile can reach host services
+      and unauthenticated ToolHive control endpoints without escaping the container.
+    - 'Advisory metadata lists ToolHive CLI < 0.30.1; ToolHive Studio < 0.38.0; patched: CLI 0.30.1;
+      Studio 0.38.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-5gm3-9crp-6g3v
+    title: 'CVE-2026-77339: github.com/f1bonacc1/process-compose'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-5gm3-9crp-6g3v
+    source_type: advisory
+    published_date: '2026-09-18'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - When MCP SSE is enabled, browser DNS rebinding can reach Process Compose tools. The separate
+      REST API token middleware does not protect this MCP listener.
+    - 'Advisory metadata lists github.com/f1bonacc1/process-compose < 1.120.0; patched: 1.120.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-xwmw-prc4-v3cr
+    title: 'GHSA-xwmw-prc4-v3cr: github.com/obot-platform/obot'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-xwmw-prc4-v3cr
+    source_type: advisory
+    published_date: '2026-09-18'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - A logged-in Obot user following an attacker authorization URL can issue an OAuth token accepted
+      beyond the requested MCP audience, without the intended consent boundary.
+    - 'Advisory metadata lists github.com/obot-platform/obot < 0.23.0; patched: 0.23.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-pr6h-vr44-xq8j
+    title: 'GHSA-pr6h-vr44-xq8j: github.com/obot-platform/obot'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-pr6h-vr44-xq8j
+    source_type: advisory
+    published_date: '2026-09-18'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Obot registry endpoints remain anonymously readable when OBOT_SERVER_ENABLE_REGISTRY_AUTH=true.
+      The disclosed data is catalog metadata, not credential values or authenticated server access.
+    - 'Advisory metadata lists github.com/obot-platform/obot < 0.23.0; patched: 0.23.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-jgh3-fggc-mcpm
+    title: 'GHSA-jgh3-fggc-mcpm: github.com/obot-platform/obot'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-jgh3-fggc-mcpm
+    source_type: advisory
+    published_date: '2026-09-18'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Obot users with Power User or higher privileges can register a remote MCP URL that causes server
+      requests to internal destinations, including through OAuth metadata discovery.
+    - 'Advisory metadata lists github.com/obot-platform/obot < 0.23.0; patched: 0.23.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-jjhp-8crj-mppq
+    title: 'CVE-2026-61647: @roomi-fields/notebooklm-mcp'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-jjhp-8crj-mppq
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Vault batch output accepts paths outside the intended directory. Version 2.0.3 sanitizes slug_prefix,
+      but vault containment requires NOTEBOOKLM_VAULT_ROOT; leaving it unset preserves unrestricted
+      writes.
+    - 'Advisory metadata lists @roomi-fields/notebooklm-mcp >= 1.6.0, < 2.0.3; patched: 2.0.3.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-798p-78g2-v556
+    title: 'CVE-2026-61612: @aborruso/ckan-mcp-server'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-798p-78g2-v556
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - CKAN server URL validation checks hostname text without validating the resolved address. Unauthenticated
+      self-hosted HTTP deployments can reach internal services; stdio requires control of tool arguments.
+    - 'Advisory metadata lists @aborruso/ckan-mcp-server <= 0.4.107; patched: 0.4.108.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-cc5h-2pwp-pvcc
+    title: 'CVE-2026-77248: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-cc5h-2pwp-pvcc
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Shared-credential HTTP deployments combine missing caller authentication with unrestricted attachment
+      reads, exposing host files through Atlassian uploads.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-wv8v-v4c5-v75j
+    title: 'CVE-2026-77246: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-wv8v-v4c5-v75j
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - HTTP callers can combine service headers pointing to a selected Atlassian endpoint with unrestricted
+      attachment paths to exfiltrate server-readable files.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-w66g-j6c4-hcfc
+    title: 'CVE-2026-77251: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-w66g-j6c4-hcfc
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Jira project and Confluence space filters can be bypassed by query construction or missing checks
+      on agile endpoints, within the credentials available to the server.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-vc25-24vv-fxxm
+    title: 'CVE-2026-77253: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-vc25-24vv-fxxm
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - HTTP callers with upload access can submit server-local paths to attachment operations, including
+      the Jira issue-update attachment flow.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-2xj6-xx86-cwwc
+    title: 'CVE-2026-77255: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-2xj6-xx86-cwwc
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Jira update_issue accepts attachment paths without a workspace boundary, allowing the MCP process
+      to disclose files using its own privileges.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-3r68-hf9h-887v
+    title: 'CVE-2026-77243: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-3r68-hf9h-887v
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - ENABLED_TOOLS and TOOLSETS filter tool listings but not direct tool calls. READ_ONLY_MODE retains
+      separate call-time enforcement.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-mrq8-fv7v-hhjg
+    title: 'CVE-2026-77257: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-mrq8-fv7v-hhjg
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - In HTTP or multi-user deployments, write-capable callers can upload server-readable files to
+      accessible Atlassian issues or pages. This primitive is file disclosure, not direct execution.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-f4p7-qx46-wc5j
+    title: 'CVE-2026-77260: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-f4p7-qx46-wc5j
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - The attachment read direction remains unrestricted after the earlier download write fix, including
+      attachments passed through Jira update_issue.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-h7wj-5v37-59r2
+    title: 'CVE-2026-77269: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-h7wj-5v37-59r2
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Confluence upload tools lack path containment. The advisory distinguishes the similar Jira upload
+      mixin from a directly registered MCP tool.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-mfv2-4wvm-9pgp
+    title: 'CVE-2026-77266: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-mfv2-4wvm-9pgp
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Jira and Confluence upload implementations read caller-supplied paths without the containment
+      checks used in the download direction.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-49xv-9743-pw8w
+    title: 'CVE-2026-77265: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-49xv-9743-pw8w
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Header URL validation and connection establishment resolve DNS separately, leaving a rebinding
+      window before the initial outbound request.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-f26r-j276-ggg4
+    title: 'CVE-2026-77270: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-f26r-j276-ggg4
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Attachment upload methods do not apply the path restrictions used by downloads; a permitted caller
+      can disclose readable server files.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-6529-c226-h328
+    title: 'CVE-2026-77261: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-6529-c226-h328
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - SSRF redirect validation is attached to the header-PAT client but omitted from basic-auth and
+      OAuth clients.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-6cr4-ccf3-x7h4
+    title: 'CVE-2026-77259: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-6cr4-ccf3-x7h4
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - A caller with attachment write access to a Confluence page can exfiltrate server-readable files
+      through the unvalidated upload path.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-4596-2p6p-28cv
+    title: 'CVE-2026-77268: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-4596-2p6p-28cv
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - OAuth token fallback files use default filesystem permissions rather than owner-only permissions,
+      exposing credentials on shared hosts.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-p6hp-93wp-fh6p
+    title: 'CVE-2026-77262: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-p6hp-93wp-fh6p
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - The Confluence upload path lacks the containment added to downloads, allowing tool callers to
+      upload readable server files to a selected Confluence endpoint.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-g2r2-3j32-j27x
+    title: 'CVE-2026-77272: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-g2r2-3j32-j27x
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - The OAuth setup callback reflects an unescaped error parameter into HTML while the setup server
+      is running and reachable.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-5wf4-jqxh-8gm3
+    title: 'CVE-2026-77267: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-5wf4-jqxh-8gm3
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Some header-derived Atlassian URLs reach API clients without the SSRF validation intended by
+      an earlier fix.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-6vmq-24h2-pj7j
+    title: 'CVE-2026-77271: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-6vmq-24h2-pj7j
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Download containment defaults to the process working directory. When that directory holds application
+      modules, attachment downloads can overwrite executable code for a later restart.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-hgcf-4mq8-5266
+    title: 'CVE-2026-77274: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-hgcf-4mq8-5266
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Header-based Atlassian URLs can pass one URL parser while the downstream HTTP client resolves
+      a different destination, bypassing SSRF restrictions.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-wrhw-j3f9-8vc6
+    title: 'CVE-2026-77244: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-wrhw-j3f9-8vc6
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - HTTP deployments using shared server credentials can accept unauthenticated callers or arbitrary
+      non-empty tokens and act with the operator credentials.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-f6pj-qv47-g96w
+    title: 'CVE-2026-77247: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-f6pj-qv47-g96w
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Write-capable attachment callers can make Jira or Confluence read server-local files and upload
+      them using the configured Atlassian credentials.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-v9m3-wfh8-5646
+    title: 'CVE-2026-77249: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-v9m3-wfh8-5646
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - The Jira user-permission lookup bypasses the guarded HTTP session, allowing an attacker-controlled
+      Atlassian endpoint to redirect requests to internal services.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-g5xv-mhgm-v5f6
+    title: 'CVE-2026-77250: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-g5xv-mhgm-v5f6
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - OAuth fallback token files inherit the process umask, exposing plaintext access and refresh tokens
+      to other local users even when keyring storage succeeds.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: github-ghsa-93xw-j965-9mx3
+    title: 'CVE-2026-77258: mcp-atlassian'
+    publisher: GitHub Advisory Database and upstream maintainers
+    url: https://github.com/advisories/GHSA-93xw-j965-9mx3
+    source_type: advisory
+    published_date: '2026-09-22'
+    topics:
+    - mcp
+    - agent-security
+    supports:
+    - Confluence attachment upload omits path validation and can disclose files readable by the MCP
+      process to a caller-controlled page.
+    - 'Advisory metadata lists mcp-atlassian < 0.22.0; patched: 0.22.0.'
+    reviewed_date: '2026-09-24'
+    status: active
+  - id: anthropic-changelog-september-2026
+    title: Claude Code September permission and plugin fixes
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md
+    source_type: maintainer
+    published_date: '2026-09-11'
+    topics:
+    - agent-security
+    supports:
+    - The 2.1.265 through 2.1.269 entries document containment, managed-policy, path-rule, secret-redaction
+      and archive-permission fixes.
+    - Release notes do not identify the withheld GitSpawn ultrareview configuration key.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: manifold-gitspawn-2026-09
+    title: GitSpawn repository configuration research
+    publisher: Manifold Security
+    url: https://www.manifold.security/blog/ai-coding-agents-git-hijack
+    source_type: research
+    published_date: '2026-09-01'
+    topics:
+    - agent-security
+    supports:
+    - Repository delivery must preserve .git/config; ordinary clone, fetch and pull do not copy
+      that configuration.
+    - The September 1 retest reports remaining paths in Claude ultrareview, Hermes, Qwen and Grok;
+      their current patch status is not established here.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-q2f8-hh8x-wpc2
+    title: 'VS Code: Nested configuration Restricted Mode bypass'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-q2f8-hh8x-wpc2
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-70334 is fixed in VS Code 1.136.2.
+    - Restricted workspace settings expressed as nested objects can take effect without workspace
+      trust, allowing settings intended to remain blocked.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-hr37-8jwr-q8p8
+    title: 'VS Code: Agent URL authority and domain policy bypass'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-hr37-8jwr-q8p8
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81379 is fixed in VS Code 1.136.2.
+    - Agent web and browser tools can bypass denied destinations through inconsistent URL parsing
+      or ignored valid administrator patterns when network filtering is enabled.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-x5qc-gqm7-93qp
+    title: 'VS Code: Webview resource root escape'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-x5qc-gqm7-93qp
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81383 is fixed in VS Code 1.136.2.
+    - A webview using non-file resource schemes can exploit inconsistent separator handling to
+      read content outside the extension's allowed resource roots.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-rvgr-2w56-2j67
+    title: 'VS Code: Copilot Chat ADO token endpoint override'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-rvgr-2w56-2j67
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81381 is fixed in VS Code 1.136.2.
+    - Repository settings can redirect authenticated Azure DevOps Code Search requests to an attacker
+      endpoint and expose the user's token.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-vww8-mqc2-4x8v
+    title: 'VS Code: Chat remote media request before filtering'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-vww8-mqc2-4x8v
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81380 is fixed in VS Code 1.136.2.
+    - Rendering agent-provided remote media can initiate a request before the chat policy removes
+      the element, potentially leaking data encoded in its URL, including on history restoration.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-g6p5-6xp8-5jwg
+    title: 'VS Code: MCP gallery metadata path traversal'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-g6p5-6xp8-5jwg
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81377 is fixed in VS Code 1.136.2.
+    - Installing or updating attacker-controlled MCP gallery metadata can write beyond per-server
+      storage; uninstalling the entry can delete an unintended directory.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-4xcg-6mm5-hj26
+    title: 'VS Code: Mapped IPv6 deny-only policy bypass'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-4xcg-6mm5-hj26
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81357 is fixed in VS Code 1.136.2.
+    - With agent filtering enabled, an IPv4 deny entry and an empty allow list, an equivalent
+      mapped IPv6 address can bypass the denied destination.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-4gv7-q2x8-32p8
+    title: 'VS Code: Browser URL separator network bypass'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-4gv7-q2x8-32p8
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81378 is fixed in VS Code 1.136.2.
+    - With agent filtering and browser chat tools enabled, URL separator interpretation differs
+      between policy validation and browser navigation, permitting requests to restricted hosts.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-2cmq-rv52-5rf6
+    title: 'VS Code: Workspace remote agent host permissions'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-2cmq-rv52-5rf6
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-78462 is fixed in VS Code 1.136.2.
+    - Workspace settings can choose a remote agent host and grant it local-file access, enabling
+      data access or code execution when the crafted repository is opened.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: microsoft-ghsa-r2gr-w3c8-wvqv
+    title: 'VS Code: Workspace Trust service bypass'
+    publisher: Microsoft
+    url: https://github.com/microsoft/vscode/security/advisories/GHSA-r2gr-w3c8-wvqv
+    source_type: advisory
+    published_date: '2026-09-08'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-81376 is fixed in VS Code 1.136.2.
+    - An untrusted workspace can connect to attacker-controlled services and bypass restrictions
+      without the user granting workspace trust.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: goose-ghsa-r5pp-p5r8-466r
+    title: Goose review Git configuration execution
+    publisher: Goose maintainers
+    url: https://github.com/aaif-goose/goose/security/advisories/GHSA-r5pp-p5r8-466r
+    source_type: advisory
+    published_date: '2026-07-24'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-72718 affects goose review before 1.44.0 and executes repository fsmonitor configuration
+      before model interaction.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: frontmcp-ghsa-65h7-9wrw-629c
+    title: FrontMCP external reference SSRF fix bypass
+    publisher: FrontMCP maintainers
+    url: https://github.com/agentfront/frontmcp/security/advisories/GHSA-65h7-9wrw-629c
+    source_type: advisory
+    published_date: '2026-06-22'
+    topics:
+    - agent-security
+    supports:
+    - Untrusted OpenAPI references bypass hostname filtering via DNS resolution, redirects or
+      mapped IPv6.
+    - The advisory lists fixes in FrontMCP/adapters 1.5.0 and mcp-from-openapi 2.5.0.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: github-db-frontmcp-cve-2026-59973
+    title: FrontMCP CVE package ranges
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/GHSA-65h7-9wrw-629c
+    source_type: database
+    published_date: '2026-09-11'
+    topics:
+    - agent-security
+    supports:
+    - Affected ranges are mcp-from-openapi >= 2.3.0, < 2.5.0 and frontmcp/@frontmcp/adapters >=
+      1.2.1, < 1.5.0.
+    - September database publication is distinct from the June maintainer disclosure.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: mysql-mcp-ghsa-rqfv-2mw9-78g2
+    title: MySQL MCP SSE origin validation
+    publisher: MySQL MCP Server maintainers
+    url: https://github.com/designcomputer/mysql_mcp_server/security/advisories/GHSA-rqfv-2mw9-78g2
+    source_type: advisory
+    published_date: '2026-06-21'
+    topics:
+    - agent-security
+    supports:
+    - SSE mode before 0.4.2 permits unauthenticated SQL requests; default stdio is unaffected.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: github-db-mysql-cve-2026-59971
+    title: MySQL MCP CVE publication
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/GHSA-rqfv-2mw9-78g2
+    source_type: database
+    published_date: '2026-09-11'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-59971 was added to the GitHub database on September 11; the maintainer advisory
+      dates to June 21.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: aws-2026-097-dynamodb-cdk
+    title: DynamoDB MCP CDK template injection
+    publisher: Amazon Web Services
+    url: https://aws.amazon.com/security/security-bulletins/2026-097-aws/
+    source_type: advisory
+    published_date: '2026-09-04'
+    topics:
+    - agent-security
+    supports:
+    - CVE-2026-85654 affects 2.0.10 through 2.1.5; 2.1.6 fixes the generator.
+    - Crafted data-model names can execute code on the host deploying the generated application.
+    reviewed_date: '2026-09-12'
+    status: active
+  - id: aikido-keyv-2026
+    title: Keyv and Friends Compromised in npm Supply Chain Attack
+    publisher: Aikido Security
+    url: https://www.aikido.dev/blog/keyv-and-friends-compromised-in-npm-supply-chain-attack
+    source_type: research
+    published_date: "2026-08-04"
+    topics: [keyv, npm, shai-hulud, supply-chain]
+    supports:
+      - Compromise reporting for Keyv and related npm packages in August 2026.
+      - Indicators and package-version context used for repository triage.
+    reviewed_date: "2026-08-07"
+    status: active
+
+  - id: safedep-keyv-2026
+    title: npm Worm Poisons keyv, cacheable and 400+ Other Packages Across Nine Organisations
+    publisher: SafeDep
+    url: https://safedep.io/keyv-npm-supply-chain-compromise/
+    source_type: research
+    published_date: "2026-08-04"
+    topics: [keyv, npm, shai-hulud, supply-chain]
+    supports:
+      - Package-scope reporting considered when classifying disputed @keyv version intelligence.
+    reviewed_date: "2026-08-07"
+    status: active
+
+  - id: jfrog-shai-hulud-2026
+    title: Major Shai-Hulud campaign strikes npm again, affecting keyv and 400+ packages
+    publisher: JFrog Security Research
+    url: https://research.jfrog.com/post/shai-hulud-is-back-august/
+    source_type: research
+    published_date: "2026-08-04"
+    topics: [keyv, npm, shai-hulud, supply-chain]
+    supports:
+      - Campaign and package-scope reporting retained as attributed intelligence.
+    reviewed_date: "2026-08-07"
+    status: active
+
+  - id: socket-keyv-2026
+    title: Popular npm Packages Keyv and Cacheable Compromised
+    publisher: Socket
+    url: https://socket.dev/blog/popular-npm-packages-keyv-and-cacheable-compromised
+    source_type: research
+    published_date: "2026-08-04"
+    topics: [keyv, npm, shai-hulud, supply-chain]
+    supports:
+      - Confirmation and technical context for compromised npm package versions.
+    reviewed_date: "2026-08-07"
+    status: active
+
+  - id: hackernews-keyv-2026
+    title: Keyv-Linked npm Worm Poisons Hundreds of Packages
+    publisher: The Hacker News
+    url: https://thehackernews.com/2026/08/keyv-linked-npm-worm-poisons-hundreds.html
+    source_type: news
+    published_date: "2026-08-04"
+    topics: [keyv, npm, shai-hulud, supply-chain]
+    supports:
+      - Secondary reporting on the scope and public disclosure of the campaign.
+    reviewed_date: "2026-08-07"
+    status: active
+
+  - id: turnbull-shai-hulud-2026
+    title: Shai-Hulud npm exploit warning
+    publisher: Alex Turnbull on LinkedIn
+    url: https://www.linkedin.com/posts/alex-turnbull-1ab9992_warning-the-shai-hulud-npm-exploit-has-nfected-share-7490508767600627714-LkNb
+    source_type: social
+    topics: [keyv, npm, shai-hulud, supply-chain]
+    supports:
+      - Community warning and discussion context; not an independent IOC authority.
+    reviewed_date: "2026-08-07"
+    status: active
+
+  - id: anthropic-ghsa-fg94-h982-f3mm
+    title: Out-of-Band Data Exfiltration via Pre-Approved HuggingFace Domain in WebFetch
+    publisher: Anthropic
+    url: https://github.com/anthropics/claude-code/security/advisories/GHSA-fg94-h982-f3mm
+    source_type: advisory
+    published_date: "2026-06-13"
+    topics: [claude-code, data-exfiltration, webfetch]
+    supports:
+      - Claude Code versions from 0.2.54 before 2.1.163 allowed covert exfiltration through pre-approved Hugging Face paths.
+      - Version 2.1.163 is the first patched release identified by the maintainer.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: nvd-cve-2026-12537
+    title: CVE-2026-12537 Detail
+    publisher: NIST National Vulnerability Database
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-12537
+    source_type: database
+    published_date: "2026-06-24"
+    topics: [ci, gemini-cli, github-actions, pre-sandbox-rce]
+    supports:
+      - A crafted .gemini/.env file could execute commands on a headless CI host before sandbox initialization.
+      - Gemini CLI 0.39.1 and run-gemini-cli 0.1.22 are the patched version floors.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: github-advisory-cve-2026-67431
+    title: MCP Ruby SDK Ruby SSE Session Poisoning
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/CVE-2026-67431
+    source_type: database
+    published_date: "2026-07-30"
+    topics: [mcp, ruby, session-isolation]
+    supports:
+      - MCP Ruby SDK releases before 0.23.0 did not bind SSE sessions to an owner.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: github-advisory-cve-2026-67432
+    title: MCP Ruby SDK Unbounded JSON-RPC Request Body
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/CVE-2026-67432
+    source_type: database
+    published_date: "2026-07-30"
+    topics: [denial-of-service, mcp, ruby]
+    supports:
+      - MCP Ruby SDK releases before 0.23.0 accepted unbounded JSON-RPC request bodies.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: github-advisory-cve-2026-63118
+    title: MCP Ruby SDK Streamable HTTP DNS-Rebinding Protection
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/CVE-2026-63118
+    source_type: database
+    published_date: "2026-07-30"
+    topics: [dns-rebinding, mcp, ruby]
+    supports:
+      - MCP Ruby SDK releases before 0.23.0 lacked Host and Origin protection for Streamable HTTP.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: github-advisory-cve-2026-63119
+    title: MCP Ruby SDK Unbounded Stdio Line Buffer
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/CVE-2026-63119
+    source_type: database
+    published_date: "2026-07-30"
+    topics: [denial-of-service, mcp, ruby]
+    supports:
+      - MCP Ruby SDK releases before 0.23.0 allowed unbounded stdio line buffering.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: github-advisory-cve-2026-67430
+    title: MCP Ruby SDK Unbounded Session Retention
+    publisher: GitHub Advisory Database
+    url: https://github.com/advisories/CVE-2026-67430
+    source_type: database
+    published_date: "2026-07-30"
+    topics: [denial-of-service, mcp, ruby, sessions]
+    supports:
+      - MCP Ruby SDK releases before 0.23.0 retained unbounded Streamable HTTP sessions.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: zenity-agent-skill-supply-chain-2026
+    title: Attackers Target Agents via The Skill Supply Chain
+    publisher: Zenity Labs
+    url: https://labs.zenity.io/post/attackers-target-agents-via-the-skill-supply-chain
+    source_type: research
+    published_date: "2026-08-06"
+    topics: [agent-skills, paperclip, skills-sh, supply-chain]
+    supports:
+      - Zenity attributed delayed malicious updates and secondary-file instructions to Paperclip and Browser Use typosquats.
+      - Install counters reported by Zenity are aggregate events and do not establish a victim count.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: zenity-ai-total-2026
+    title: AI Total
+    publisher: Zenity Labs
+    url: https://zenity.io/research/ai-total
+    source_type: research
+    published_date: "2026-08-06"
+    topics: [agent-skills, dynamic-analysis, sandbox]
+    supports:
+      - AI Total dynamically evaluates submitted agent skills in an instrumented environment.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: tenet-ghostjacking-2026
+    title: Ghostjacking Attacks and the Agentic Kill Chain
+    publisher: Tenet Security
+    url: https://tenetsecurity.ai/blog/ghostjacking-attacks-agentic-kill-chain/
+    source_type: research
+    published_date: "2026-08-09"
+    topics: [agentjacking, indirect-prompt-injection, observability]
+    supports:
+      - Tenet reports demonstrations where attacker-controlled observability data influenced agents with privileged tools.
+      - Success rates, organization counts, and detection claims remain attributed to Tenet.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: perplexity-numbat-2026
+    title: Securing Agents Across Perplexity's Client Endpoints with Numbat
+    publisher: Perplexity Research
+    url: https://research.perplexity.ai/articles/securing-agents-across-perplexity%E2%80%99s-client-endpoints-with-numbat
+    source_type: maintainer
+    published_date: "2026-07-29"
+    topics: [agent-runtime, local-monitoring, numbat]
+    supports:
+      - Numbat is a local agent activity monitor with an optional enforcement mode.
+      - Perplexity documents 52 built-in CEL rules across 11 behavior categories for the reviewed release.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: tenet-agent-jackstop-2026
+    title: Harden Cursor and Claude Code against prompt injection via untrusted tool output
+    publisher: Tenet Security
+    url: https://github.com/tenet-security/agent-jackstop
+    source_type: maintainer
+    topics: [agentjacking, claude-code, cursor, runtime-guardrail]
+    supports:
+      - Tenet publishes a public reference repository for Cursor and Claude Code controls.
+      - No software license was visible in the reviewed repository, so redistribution rights are not inferred.
+    reviewed_date: "2026-08-18"
+    status: active
+
+  - id: varonis-cosnitch-2026
+    title: "CoSnitch: When Your AI Assistant Becomes Its Own Whistleblower"
+    publisher: Varonis Threat Labs
+    url: https://www.varonis.com/blog/cosnitch
+    source_type: research
+    published_date: "2026-08-18"
+    topics: [copilot, indirect-prompt-injection, memory-poisoning, oauth]
+    supports:
+      - "Varonis chained three Microsoft Copilot Personal weaknesses (an undocumented ?autorun=1 URL parameter, exfiltration of connected-app data via Copilot's built-in URL fetch, and persistent memory poisoning through page summarization) into one-click data exfiltration, tracked as CVE-2026-24301."
+      - Varonis reported the issue to Microsoft in December 2025; Microsoft shipped a server-side fix on 2026-08-18, and Varonis states it found no evidence of pre-patch in-the-wild exploitation.
+    reviewed_date: "2026-08-24"
+    status: active
+
+  - id: nvd-cve-2026-24301
+    title: CVE-2026-24301 Detail
+    publisher: NIST NVD
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-24301
+    source_type: database
+    published_date: "2026-08-18"
+    topics: [copilot, cve]
+    supports:
+      - Formal CVE record for the CoSnitch command-injection/information-disclosure chain in Microsoft Copilot Web.
+    reviewed_date: "2026-08-24"
+    status: active
+
+  - id: ghsa-siyuan-asset-upload-2026
+    title: "SiYuan MCP asset.upload Reads Arbitrary Absolute File Paths (Workspace Boundary Bypass)"
+    publisher: siyuan-note (GitHub Security Advisory)
+    url: https://github.com/siyuan-note/siyuan/security/advisories/GHSA-p23f-cm6q-2qp8
+    source_type: advisory
+    published_date: "2026-08-13"
+    topics: [mcp, path-traversal, prompt-injection]
+    supports:
+      - "The asset.upload MCP tool in SiYuan before v3.8.1 accepted arbitrary absolute file paths with no workspace boundary check, so a prompt-injected instruction could direct the built-in AI agent to copy files such as SSH keys or credentials from outside the workspace into the asset directory."
+      - Fixed in SiYuan v3.8.1, released 2026-08-18.
+    reviewed_date: "2026-09-01"
+    status: active
+
+  - id: nvd-cve-2026-82233
+    title: CVE-2026-82233 Detail
+    publisher: NIST NVD
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-82233
+    source_type: database
+    published_date: "2026-08-28"
+    topics: [mcp, path-traversal, cve]
+    supports:
+      - Formal CVE record (CNA VulnCheck) for the SiYuan asset.upload MCP tool path traversal, rated medium (CVSS 3.1 5.7 / CVSS 4.0 6.9).
+    reviewed_date: "2026-09-01"
+    status: active
+
+  - id: github-ghsa-mcp-php-sdk-sse-2026
+    title: "DoS: client HttpTransport SSE buffer (sseBuffer .= chunk) grows unbounded when server withholds the event delimiter"
+    publisher: modelcontextprotocol/php-sdk (GitHub Security Advisory)
+    url: https://github.com/modelcontextprotocol/php-sdk/security/advisories/GHSA-7m52-jw36-44r3
+    source_type: advisory
+    topics: [mcp, denial-of-service, php-sdk]
+    supports:
+      - "The official MCP PHP SDK (Composer package mcp/sdk) HttpTransport component appends every incoming Server-Sent Events chunk to an unbounded in-memory buffer, flushing only on the SSE event delimiter, so a malicious, compromised, or man-in-the-middle MCP server that withholds the delimiter can exhaust the client process's memory and deny service."
+      - Fixed in mcp/sdk 0.7.1; affected versions 0.5.0 through 0.7.0.
+    reviewed_date: "2026-09-01"
+    status: active
+
+  - id: nvd-cve-2026-53965
+    title: CVE-2026-53965 Detail
+    publisher: NIST NVD
+    url: https://nvd.nist.gov/vuln/detail/CVE-2026-53965
+    source_type: database
+    published_date: "2026-08-25"
+    topics: [mcp, denial-of-service, cve]
+    supports:
+      - Formal CVE record (CNA GitHub, Inc.) for the unbounded SSE buffer growth denial-of-service in the official MCP PHP SDK's HttpTransport, rated medium (CVSS 4.0 6.9 per the GitHub CNA record; third-party rescoring to CVSS 3.1 8.7 exists and is not independently confirmed here).
+    reviewed_date: "2026-09-01"
+    status: active
+
+  - id: roccia-agent-lure-stealer-gist-2026-11
+    title: "Agent Lure Stealer IOC list (github_zip_lure_iocs_2026-11-04.csv)"
+    publisher: Thomas Roccia (GitHub gist fr0gger)
+    url: https://gist.github.com/fr0gger/3d0288bf0fee3b8df7b618e7c10334d7
+    source_type: research
+    published_date: "2026-11-04"
+    topics: [fakegit, smartloader, github, ioc, agent-skills]
+    supports:
+      - "Gist created 2026-11-04T20:18:50Z and updated 2026-11-05T04:27:37Z lists 73 GitHub repositories that each commit a lure ZIP; 51 were live and 22 returned 404 at a 2026-11-04 GitHub re-check."
+      - "Records per-row confidence: the two ZIP hashes and sample-1 components are confirmed by a local hash and a Triage report; sample-2 components rest on static analysis and a local hash with no public match; the IPs, Polygon contract and dRPC domain are campaign-level and unconfirmed for these builds."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: roccia-linkedin-73-repos-2026-11
+    title: "Post: We found 73 GitHub repos posing as AI agent tools"
+    publisher: LinkedIn (Thomas Roccia)
+    url: https://www.linkedin.com/posts/thomas-roccia_we-found-73-github-repos-posing-as-ai-share-7523845292753080320-VZJI/
+    source_type: social
+    published_date: "2026-11-04"
+    topics: [fakegit, smartloader, github, agent-skills, mcp]
+    supports:
+      - "Social context only, not an independent IOC authority. The post states that SKILL.md and settings files in the lure repositories are clean, that the README links a committed ZIP installer, that some repositories hide the ZIP under .claude/hooks/config/, and that a few accounts look hijacked."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: island-agentbaiting-2026-07
+    title: "AgentBaiting: How 800+ Fake AI Skills and MCP Servers Delivered Malware"
+    publisher: Island
+    url: https://www.island.io/blog/agentbaiting-how-800-fake-ai-skills-and-mcp-servers-delivered-malware
+    source_type: research
+    published_date: "2026-07-20"
+    topics: [fakegit, smartloader, github, mcp, agent-skills, registries]
+    supports:
+      - "About 7,600 malicious repositories from about 6,600 profiles, over 800 posing as Skills or MCP servers, over 600 listings in public registries including LobeHub, Glama, MCP.so and MCP Market."
+      - "Island reports that Claude Code, Gemini and ChatGPT surfaced campaign repositories in its tests without being given a link, and that part of the distribution uses GitHub Release assets rather than files in the repository."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: bleepingcomputer-fakegit-returns-2026-10
+    title: "FakeGit malware campaign returns with 17,610 malicious GitHub repos"
+    publisher: BleepingComputer
+    url: https://www.bleepingcomputer.com/news/security/fakegit-malware-campaign-returns-with-17-610-malicious-github-repos/
+    source_type: news
+    published_date: "2026-10-08"
+    topics: [fakegit, smartloader, github]
+    supports:
+      - "Secondhand report of an Apiiro analysis: FakeGit resumed on October 4 and uses 17,610 repositories, with more than 13,000 pushed in 34 hours."
+      - "Quotes Apiiro that in sampled commits 97% touched only the README and 88% pointed the Download button at a ZIP that installs SmartLoader. The Apiiro page itself returned HTTP 403 and was not read."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: netskope-fake-ai-tools-2026-08
+    title: "Developers in the Crosshairs: Fake AI Tools Deliver Infostealer"
+    publisher: Netskope Threat Labs
+    url: https://threatlabs.netskope.com/blog/2026/08/developers-in-the-crosshairs-fake-ai-tools-deliver-infostealer
+    source_type: research
+    published_date: "2026-08-03"
+    topics: [fakegit, smartloader, github, polygon, stealc]
+    supports:
+      - "Fake AI tool lures deliver SmartLoader and an infostealer; both loaders resolved their C2 address from the Polygon blockchain at runtime, using polygon.drpc.org among other RPC endpoints."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: hexastrike-109-fake-repos-2026-04
+    title: "Cloned, Loaded, and Stolen: How 109 Fake GitHub Repositories Delivered SmartLoader and StealC"
+    publisher: Hexastrike Cybersecurity
+    url: https://hexastrike.com/resources/blog/threat-intelligence/cloned-loaded-and-stolen-how-109-fake-github-repositories-delivered-smartloader-and-stealc/
+    source_type: research
+    published_date: "2026-04-18"
+    topics: [fakegit, smartloader, github, stealc]
+    supports:
+      - "109 malicious repositories across 103 accounts redirect users to embedded ZIP files with a LuaJIT-based SmartLoader stage; SmartLoader resolves its C2 through a Polygon smart contract."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: derp-fakegit-luajit-2026-03
+    title: "FakeGit: LuaJIT malware distributed via GitHub at scale"
+    publisher: Derp.ca
+    url: https://www.derp.ca/research/fakegit-luajit-github-campaign/
+    source_type: research
+    published_date: "2026-03-04"
+    topics: [fakegit, smartloader, github, stealc, ioc]
+    supports:
+      - "A Vietnamese-speaking operator has distributed LuaJIT malware through GitHub since March 2025; the page lists StealC C2 infrastructure for other FakeGit samples."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: straiker-oura-mcp-smartloader-2026-02
+    title: "SmartLoader Clones Oura Ring MCP in Supply Chain Attack"
+    publisher: Straiker
+    url: https://www.straiker.ai/blog/smartloader-clones-oura-ring-mcp-to-deploy-supply-chain-attack
+    source_type: research
+    published_date: "2026-02-05"
+    topics: [fakegit, smartloader, github, mcp, registries]
+    supports:
+      - "SmartLoader operators cloned the Oura MCP server, built fake forks and contributors, submitted the trojanized server to MCP registries, and delivered StealC."
+    reviewed_date: "2026-11-05"
+    status: active
+
+  - id: trendmicro-fake-github-smartloader-2025-03
+    title: "AI-Assisted Fake GitHub Repositories Deliver SmartLoader"
+    publisher: Trend Micro
+    url: https://www.trendmicro.com/en_us/research/25/c/ai-assisted-fake-github-repositories.html
+    source_type: research
+    published_date: "2025-03-11"
+    topics: [fakegit, smartloader, github, lumma]
+    supports:
+      - "Fake GitHub repositories distribute SmartLoader inside ZIP files holding lua51.dll, luajit.exe, userdata.txt and Launcher.bat; the follow-on payload described is Lumma Stealer."
+    reviewed_date: "2026-11-05"
+    status: active

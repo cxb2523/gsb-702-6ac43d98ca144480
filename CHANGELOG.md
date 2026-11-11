@@ -1,0 +1,623 @@
+# Changelog
+
+All notable changes to AgentSec Triage are recorded here. The source repository
+is public, but no package, tag, source archive, or GitHub release is authorized
+while the data-licensing decision remains unresolved.
+
+## [Unreleased]
+
+- FakeGit / SmartLoader / StealC agent-tool lures added on November 5, 2026
+  (database 2.34.0). New detector `fakegit-archive-lure` with three rules:
+  `known-fakegit-archive-hash` (`critical / confirmed`),
+  `readme-links-committed-archive` and `archive-in-agent-config-directory`
+  (both `medium / review`). Source IOC list: Thomas Roccia's gist of 73
+  repositories (created 2026-11-04, updated 2026-11-05), with per-row
+  confidence preserved; 51 repositories were live and 22 returned 404 at the
+  2026-11-04 check. The database records the 73 defanged repositories, ten
+  SHA-256 values, and the campaign, with four hashes projected: the two
+  confirmed ZIPs and two sample-1 components. Runtime binaries, the
+  runtime-dropped `dist.lua`, and sample-2 components stay authoring-only. Three
+  new events and eight new sources (Island, BleepingComputer, Netskope,
+  Hexastrike, Derp.ca, Straiker, Trend Micro, the gist and the LinkedIn post);
+  the Apiiro page returned HTTP 403, so its figures are cited secondhand via
+  BleepingComputer with status `monitoring`. Hashes with a `campaign_id` now
+  project into a separate `campaign_hashes` runtime map, so `shai-hulud-keyv`
+  no longer shares a hash map with this campaign; regression tests prove
+  neither detector reports the other's hashes. Discovery now lists `.7z`,
+  `.rar`, and `.zip` files that the source scope excludes as binary assets in a
+  new `archives` field passed to detectors; selected files and exclusion counts
+  are unchanged. Not scanned: archive contents, GitHub Release assets, Git
+  history, repository ownership. Playbook `fakegit-archive-lure` v1.0.0 added.
+  The `/update-threat-db` command gained an intake section for researcher IOC
+  dumps. The license prose inventory grows to 675 fields, 647 unreviewed.
+  Guarded by `tests/integration/test_fakegit_archive_lure_detector.py`,
+  `tests/unit/test_campaign_hashes.py`, and
+  `tests/unit/test_fakegit_threat_update.py`.
+- Scanning-tool commands corrected on November 4, 2026: three
+  `scanning_tools` entries told readers to run code that the named vendor does
+  not publish. Snyk publishes no npm package for Agent Scan, so
+  `npx @snyk/agent-scan` became `uvx snyk-agent-scan@latest`. The npm name
+  `mcp-scan` belongs to an unrelated author, while Invariant's scanner was
+  renamed to the PyPI package `snyk-agent-scan`; its entry now uses the same
+  command and the `snyk/agent-scan` repository. Ferrok ships a GitHub Action
+  and its npm name is unregistered, so its entry is now
+  `uses: rfounds/ferrok-scan@v1` with type `github-action`, the repository
+  URL, and the limitation that it needs a Ferrok API key and calls
+  `https://api.ferrok.dev` by default. `tests/unit/test_scanning_tool_commands.py`
+  guards the three commands. The license prose inventory now cites the new
+  URLs as source locators.
+- Coverage-gap review on November 3, 2026 (database 2.33.0): compared the
+  586 CVE identifiers indexed by `mcp-security-project/mcp-cve-project` with
+  this database and found 486 absent after GHSA alias matching. Reviewed the
+  25 that touch tracked coding agents, official MCP SDKs and core MCP tools
+  against their GitHub advisories. Added 22 confirmed records (mcp-remote,
+  Claude Code Action, Codex CLI, Copilot CLI, Cursor, Zed, the MCP Python,
+  TypeScript, Go and Java SDKs, MCP Inspector, FastMCP, GitHub MCP Server and
+  the MCP Registry) with sources and dated events. Two unreviewed advisories
+  without a fixed version stay `monitoring`: the deprecated Slack MCP server
+  (CVE-2025-34072) and Codex (CVE-2026-19591). CVE-2026-21518 is deferred
+  because NVD names neither MCP nor a fixed version. The index is a lead list
+  only: the Claude Code Action fix is 1.0.74 and severity medium per the
+  advisory, not 1.0.78 and critical as indexed. Floors rise for MCP Inspector
+  (0.16.6) and the MCP Java SDK (1.1.1), and are added for GitHub MCP Server
+  (1.1.0), the MCP Registry (1.7.5) and Copilot CLI (0.0.423); no mcp-remote
+  floor is set because CVE-2026-108716 remains unfixed. Every new record is
+  `not_detected`. The license prose inventory grows to 673 fields, 645
+  unreviewed. Guarded by `tests/unit/test_coverage_gap_threat_update.py`.
+
+- Reviewed October 4 through November 2, 2026 (database 2.32.0): added 31
+  advisory records (25 CVE, six GHSA-only) with 31 primary sources and dated
+  events for Claude Code, Claude Desktop, the Claude Agent SDK for Python, the
+  MCP Python and TypeScript SDKs, FastMCP, chrome-devtools-mcp, JetBrains Junie
+  CLI, Langflow, nginx-ui and 10 other MCP servers or integrations. Events keep
+  the maintainer disclosure date when GitHub indexed an advisory later.
+- Recorded four reports without a maintainer advisory (ZCode, MCP Kotlin SDK,
+  mcp-go, mcp-remote) as `monitoring` with `review` confidence. Each also has a
+  documented-only catalogue record without a version floor, because the landing
+  requires every event CVE to resolve to a catalogue record. Added the CVE
+  identifiers now assigned to four October GHSA-only MCP SDK records to their
+  record notes and to the summary of an `intelligence_update` event, without
+  rewriting the October events.
+- Added two campaign events: the tampered Claude Code extension served by the
+  Cursor marketplace on October 29 (`not_detected`) and the testmetest
+  repositories carrying coding-agent startup hooks (`partial`: the existing
+  `shai-hulud-keyv` detector reports the Claude Code SessionStart hook and the
+  VS Code folder-open task as review findings; Gemini and Cursor files are not
+  read). Every new vulnerability record remains `not_detected`. Totals: 219
+  CVE/advisory records, 132 sources and 119 events. The license prose
+  inventory grows from 555 to 625 fields, pending the existing rights review.
+  No public release authorization was added.
+- The owner authorized commit and push of this source-repository update on
+  November 2, 2026. Package, tag, archive and GitHub release gates remain blocked.
+
+- Read reviewed threat YAML explicitly as UTF-8 in September and October
+  regression tests, so Windows does not decode the corpus as CP1252.
+
+- Reviewed September 24 through October 4, 2026 (database 2.31.0): added
+  five CVE and seven GHSA-only records, 12 primary sources and 12 dated events
+  for Anthropic, MCP Python and TypeScript SDKs, AWS Security Agent MCP and
+  Cline Hub. Cline retains its June 23 maintainer disclosure and unknown
+  patched version rather than adopting its September indexing date.
+- Recorded branch-specific SDK floors, OAuth issuer and stored-credential
+  migration requirements, redirect-header limits and Cowork's separate host
+  file-opening and guest-kernel fixes. All additions remain `not_detected`;
+  executable detector coverage is unchanged. Totals: 184 CVE/advisory records,
+  94 sources and 81 events. The license prose inventory grows from 531 to
+  555 fields, with new fields pending the existing rights review. No public
+  release authorization was added.
+- The owner authorized commit and push of this source-repository update on
+  October 4, 2026. Package, tag, archive and GitHub release gates remain blocked.
+
+- Reviewed September 12 through September 24, 2026 (database 2.30.0): added
+  33 CVEs, four GHSA-only records and four research or release-note advisories.
+  The batch covers MCP Atlassian, GitLab, CKAN, NotebookLM, Obot, Process
+  Compose, ToolHive, Sentry Seer, Codex sandbox escapes, Plugin4Shell and
+  Claude Code fixes through 2.1.281. Earlier maintainer disclosures retain
+  their original dates when newly indexed by GitHub in September.
+- Added 40 evidence sources and 41 dated events. Totals are 172 CVE/advisory
+  records, 82 sources and 69 events. Overlapping Atlassian reports retain
+  distinct upstream identifiers; these totals do not count independent flaws.
+- Preserved documented-only coverage for all additions, separate Codex CLI
+  and Desktop floors, NotebookLM's required vault-root configuration, and
+  Sentry's unknown patched version. No executable detector or public release
+  authorization was added.
+
+- Refreshed threat intelligence through September 12, 2026 (database 2.29.0):
+  14 CVEs covering DynamoDB MCP, MySQL MCP, FrontMCP, Goose and ten VS Code
+  advisories, plus one Claude Code release-note advisory. Added 18 sources and
+  16 dated events, including a GitSpawn monitoring fiche. July/June disclosures
+  retain their original dates when added during this review.
+- Raised the reviewed Claude Code version floor to 2.1.269 and added seven
+  component floors. GitSpawn's unresolved September 1 variants remain under
+  review; the release-note advisory does not establish that they are fixed.
+- Kept all new intelligence explicitly outside executable detector coverage.
+  Totals are 131 CVE/advisory records, 42 intelligence sources and 28 events.
+  The license prose inventory now contains 449 fields; existing publication
+  restrictions remain unresolved.
+
+### Added
+
+- Added a generated README neighborhood that connects AgentSec Triage to the guide security feed, ctxharness configuration checks, and the plugin security workflows.
+
+- Added two MCP-ecosystem vulnerability records to the threat database
+  (version 2.28.0): CVE-2026-82233 (SiYuan `asset.upload` MCP tool path
+  traversal, fixed in 3.8.1) and CVE-2026-53965 (official MCP PHP SDK
+  `HttpTransport` unbounded SSE buffer denial of service, fixed in 0.7.1).
+  Both are documented-only (`not_detected`); neither has an AgentSec detector,
+  since one targets a third-party desktop application's bundled MCP tool and
+  the other targets a runtime PHP dependency, outside AgentSec's local
+  repository scan surface. Sourced with NVD and the upstream GitHub Security
+  Advisories in `data/intelligence/sources.yaml` and `data/intelligence/events.yaml`.
+  The license prose inventory grew from 430 to 433 fields as a result; the
+  three new fields are `UNREVIEWED`/`UNKNOWN` pending the same owner review
+  required for the rest of the database (see `docs/LICENSE-INVENTORY.md`,
+  `docs/LICENSE-PROSE-REVIEW.md`, and `docs/LICENSE-OWNER-DECISION-PACKET.md`).
+
+- Added a compact author profile to the repository README with tracked links to
+  the author's background, blog, and public projects.
+
+- Added a 16:9 AgentSec workflow infographic that presents repository inputs,
+  bounded scanning, campaign detection, coverage-aware reporting, response
+  outputs, and the primary CLI command without claiming system certification.
+- Added a focused project overview for product surfaces, the intelligence and
+  scan data flow, canonical files, detector-promotion requirements, report
+  contracts, consumer synchronization, and the release boundary.
+
+- Added deterministic `human` and schema-validated `json` formats to
+  `agentsec detectors explain`. Detector-explain v1 projects canonical detector
+  rules, sources, inputs, applicability, limitations, remediation, and
+  `not_scanned` capabilities together with bundled threat-database coverage.
+  Explicit `active`, `partial`, `documented_only`, and `not_scanned` states keep
+  documented intelligence distinct from executable rules. The schema and its
+  SHA-256 digest are packaged and verified by `agentsec doctor`.
+- Added sourced response playbooks v1 for every active `shai-hulud-keyv` and
+  `clawhavoc-skill` rule. The schema-validated deterministic mapping preserves
+  `confirmed`, `high`, `review`, and `contested`, separates evidence
+  collection, manual containment, remediation, and verification, forbids
+  destructive automation, and marks host, identity, registry, and remote-CI
+  work as outside AgentSec scope. Existing remediation URLs remain unchanged
+  until stable public playbook routes exist.
+
+- Added evidence-backed product decisions that separate five parity
+  requirements, three differentiation bets, rejected V0.1 scope, measurable
+  proof, and the accepted SARIF, delayed-skill, source-action, explain, and
+  response-playbook sequence.
+- Refreshed the provisional naming screen against official GitHub, PyPI, npm,
+  crates.io, and RDAP endpoints. `RepoVigil` remains the first candidate and
+  `BeforeTrust` the only current fallback. `CampaignScope` is blocked by exact
+  GitHub and `.com` collisions. Added a reproducible blind comprehension-test
+  kit with one candidate exposure per participant; trademark review, crates.io
+  recheck, and human results remain blocking, so no rename is authorized.
+
+- Published reviewed `clean-control` observations for seven digest-approved
+  competitor images. The report records exit status, completion evidence,
+  diagnostics, scratch writes, captured-output digests, and comparison limits
+  without publishing raw third-party output or claiming detection parity. It
+  also records the AgentSec baseline and the gated requirements for the next
+  positive, near-miss, unsupported, and confinement fixture matrix.
+- Added eight deterministic teardown plans for SkillSpector, AgentShield, and
+  agent-bom plus a tracked path-free blueprint that reconstructs their ignored
+  host-specific files. Plan v2 binds the real full Git commit and deterministic
+  source and fixture tree evidence. The runner rematerializes both inputs,
+  rechecks their digests immediately before Docker, rejects non-finite resource
+  values, uses bounded scratch `tmpfs`, and requires a separate digest-bound
+  approval receipt. It rejects absent, malformed, non-approved, mismatched, or
+  plan-obsolete receipts. Timeout cleanup uses the cidfile to kill and remove
+  the daemon-side container and verifies disappearance. Future envelopes record
+  the full plan digest, receipt digest, and procedural approval metadata. This
+  is an audit gate, not identity authentication. No approval receipt or
+  competitor execution was created, so every prepared observation remains
+  `not_tested`.
+- Added a local AgentSec fixture-matrix harness that runs each inert fixture
+  three times, removes runtime duration before digest comparison, rejects
+  semantic or exit-code drift, preserves findings and coverage evidence, and
+  confines its machine report to the ignored local benchmark directory.
+- Added a repository-local composite GitHub Action for checked-out AgentSec
+  source. Its tested runner stages SARIF outside the scan root, validates the
+  report's completion and exit metadata, publishes to a configurable path, and
+  returns the scanner's exact `0`, `1`, or `2` class. A consumer example pins
+  checkout, Python setup, and SARIF upload actions to full SHAs verified against
+  their official tags. Remote AgentSec action use, package installation,
+  release checksums, and provenance remain blocked by the existing data-license
+  gate.
+
+- Added deterministic SARIF 2.1.0 output for `agentsec scan`. Findings map to
+  stable detector/rule IDs, SARIF severity levels, relative URI-encoded
+  locations, confidence, campaign, technique, and remediation properties. Run
+  properties retain completion, diagnostics, discovery exclusions,
+  per-detector coverage, and unsupported capabilities. The invocation preserves
+  exit code `2` for incomplete scans, so exporting SARIF cannot turn partial
+  coverage into a successful verdict. Batch SARIF remains outside the current
+  alpha; the repository-local Action is recorded separately above.
+- Added the stable `clawhavoc-skill` detector for an exact campaign domain in
+  repository-local `SKILL.md` files and explicitly delegated same-skill setup
+  instructions. The detector follows only bounded local Markdown references,
+  rejects hostname-suffix near misses, reports missing or unreadable applicable
+  instructions as incomplete, and returns `high/high` review evidence instead
+  of treating a filename, delegation, or skill presence as confirmed
+  compromise. Added positive, near-miss, reference-boundary, and diagnostic
+  regression tests plus explicit registry, remote-payload, runtime, and
+  unreferenced-file coverage limits.
+- Added a schema-enforced intelligence correction and retraction workflow.
+  Later records must use `updated_date`, reference preserved earlier records
+  through `affected_event_ids`, and carry `corrected` or `retracted` status as
+  appropriate. Validation rejects missing, unresolved, self-referencing, and
+  misplaced targets. Generated timelines, packaged intelligence JSON, and the
+  public feed retain the relationship.
+
+- Added a deterministic inventory for all 430 current `notes` and `description`
+  fields in the threat database. It records stable escaped field paths, full
+  value digests, 93 source locators across 77 fields, review state, and required
+  action. The generator rejects duplicate paths and provides a byte-for-byte
+  `--check` mode enforced by CI. Historical local provenance remains verified
+  for 28 fields, all 430 legal classifications remain `UNKNOWN`, and the
+  gated-data publication block remains active. The builder now fails closed on
+  non-textual prose values and rejects YAML merge keys that could hide semantic
+  collisions.
+
+- Added explicit `source`, `dependencies`, and `repository` scan scopes. The
+  default `source` scope now reports measured exclusions for dependency,
+  generated, binary, VCS, and covered internal-symlink paths. JSON reports use
+  scan-result schema v2, which separates discovery counts from each detector's
+  effective coverage. Human output exposes the same boundary, and skipped Git
+  history is now an explicit unsupported capability instead of a scan error.
+
+- Added bounded `agentsec batch` triage for explicit roots or a UTF-8
+  `--from-file` list. It reuses the in-process scanner, preserves input order,
+  applies aggregate exit precedence `2 > 1 > 0`, supports redaction and
+  publishes batch-result schema v1 with embedded scan-result v2 reports.
+
+- Packaged scan-result v1, scan-result v2, and batch-result v1 with canonical
+  SHA-256 digests. `agentsec doctor` now verifies the active scan and batch
+  contracts independently and reports each validated artifact by name.
+
+- Added the approved scan-scope and batch-triage design plus its TDD
+  implementation plan. They specify explicit `source`, `dependencies`, and
+  `repository` scopes, scan-result schema v2, batch-result schema v1,
+  measurable exclusions, non-followed internal symlink aliases, and migration
+  constraints without claiming Git-tracked coverage.
+
+- Added documentation tests that keep public repository visibility distinct
+  from gated-data redistribution rights and that require competitive benchmark
+  documentation to reflect the completed seven-image build gate.
+
+- Added a dated scanner-ecosystem inventory covering direct competitors,
+  specialized MCP and skill scanners, supply-chain tools, naming collisions,
+  product gaps, and the first hands-on evaluation queue. The inventory combines
+  the supplied market study, the verified 100,319-repository local corpus, and
+  official README checks without treating project claims as benchmark results.
+- Added a 15-day competitive-analysis plan with pinned static reviews,
+  execution and safety gates, an inert fixture corpus, isolated benchmark
+  requirements, product-decision limits, naming checks, roadmap milestones,
+  validation criteria, commit boundaries, and rollback conditions.
+- Added a `--color {auto,always,never}` flag and ANSI severity colors to the
+  human report (`critical` red, `high` orange, `medium` yellow, `low` blue,
+  `info` purple). Defaults to `always`; use `auto` to color only on a
+  terminal and honor `NO_COLOR`, or `never` before redirecting to a file.
+  Also fixed the human renderer silently dropping each finding's
+  `remediation_url`, a field the JSON report already exposed; it now prints
+  as `(remediation: <url>)` after the finding's evidence.
+- Added a schema-validated index for 16 pinned competitor repositories and a
+  research methodology that separates declared, code-verified, observed,
+  contradicted, unsupported, and untested evidence. The standard-library
+  validator can also confirm the external clone directories on demand.
+- Added a mandatory competitor profile template and validation for 14 evidence
+  sections. Factual table rows must carry an explicit evidence state before a
+  profile can enter the static comparison.
+- Added pinned static profiles for Aguara, patient-zero, Repo Forensics, and
+  cc-audit. The reviews trace scanner boundaries, intelligence updates, CI
+  behavior, licenses, incomplete-scan handling, and the runtime witnesses that
+  remain blocked behind the benchmark approval gate.
+- Added pinned static profiles for AgentShield, Snyk Agent Scan, AgentSeal, and
+  Medusa. The reviews separate static repository checks from host inventory,
+  hosted analysis, MCP execution, registry traffic, external linters, and
+  target-owned configuration.
+- Added pinned static profiles for NVIDIA SkillSpector, Cisco Skill Scanner,
+  AgentSec by debu-sinha, and Trust Issues. The reviews cover skill-specific
+  analyzers, completeness accounting, host hardening, package gates, manual
+  reasoning, naming collision, and three documented fail-open or evidence-drift
+  cases.
+- Added pinned static profiles for Sigil, agent-security-scanner-mcp, Inkog,
+  and agent-bom. The reviews cover quarantine workflows, broad MCP scanning,
+  hosted source analysis, governance inventory, network boundaries, traversal
+  omissions, and fail-closed evidence contracts.
+- Added a static comparison matrix for all 16 pinned projects, split by product
+  job, safety, coverage honesty, intelligence, distribution, and maintenance.
+  The matrix proposes an eight-tool offline benchmark cohort and records why
+  the other projects remain excluded from the first controlled run.
+- Added a validated corpus of 12 inert competitive fixtures covering clean,
+  confirmed, contested, near-miss, hook, editor startup, delayed skill, MCP,
+  CI, unsupported lockfile, renamed-content, and symlink-confinement cases.
+  The validator rejects executable bits, archives, secret-shaped content,
+  undeclared files, unconfined paths, and malformed source attribution.
+- Added a host-side competitive benchmark runner with exact-plan digests,
+  immutable image requirements, read-only inputs, disabled network, non-root
+  execution, dropped capabilities, resource limits, bounded output capture,
+  scratch write inventory, output digests, local raw-record isolation, and a
+  competitor-free self-test. The design records current measurement and
+  normalization limits instead of claiming unsupported containment evidence.
+- Added seven locked competitor image recipes, a schema-level recipe validator,
+  immutable local image ID support, exact runtime command arrays, fixture
+  subsets, and a separate build approval gate. The gate keeps dependency
+  retrieval ahead of source copies, disables network for source-present build
+  steps, and blocks Sigil before build because the reviewed revision has no
+  tracked `Cargo.lock`.
+- Recorded seven verified local competitor image IDs. The controlled sequence
+  built Aguara, patient-zero, AgentShield, `cc-audit`, SkillSpector, Cisco Skill
+  Scanner, and `agent-bom` without running their CLIs. Seven ignored local
+  `clean-control` plans now have exact runtime arguments, resource policies,
+  and approval digests for the next owner gate.
+- Added a CoSnitch intelligence fiche for `CVE-2026-24301`, sourced from
+  Varonis Threat Labs and NVD. The fiche records the one-click Microsoft
+  Copilot Personal chain, the 2026-08-18 server-side fix, and Varonis's report
+  that it found no pre-patch exploitation. Detector coverage is
+  `not_applicable` because the affected Copilot Web endpoint is hosted by
+  Microsoft and produces no repository artifact for AgentSec to inspect. The
+  public feed now contains 20 sources and 10 events; runtime database and
+  detector counts remain unchanged.
+- Added terminal-aware scan progress with `--progress`, forced and disabled
+  modes, plus `--verbose` file, directory, and byte counters. Progress is
+  bounded, contains no target content, and stays on `stderr` so JSON and human
+  reports remain isolated on `stdout`. Progress now reports the loaded threat
+  database metadata, resolved repository scope, selected detectors, active
+  safety limits, and an indeterminate discovery bar with exact counters. The
+  bar reaches `100%` only after traversal finishes. `--redact` hides repository
+  and bundled resource paths.
+- Added threat database 2.27.0 with seven primary-source-verified CVEs, four
+  Paperclip and Browser Use skill or package records, corrected minimum-safe
+  versions, 12 reviewed intelligence sources, seven dated fiches, and an
+  explicit `not_detected` or `not_applicable` coverage statement for every new
+  event. Added the canonical `/update-threat-db` workflow with source promotion,
+  generation, synchronization, and publication gates.
+- Added a schema-validated, deterministic `security-feed.v1.json` containing
+  AgentSec versions, factual database counters, sourced landing metrics,
+  detector contracts, and reviewed intelligence fiches. Added byte-for-byte
+  guide and landing synchronization, authoring instructions, and a narrow
+  CC BY-SA 4.0 feed-publication exception that excludes gated IOC data.
+- Added focused source-installation and scan-example guides, a copy-ready
+  read-only LLM audit prompt, and a root `llms.txt` index of canonical project
+  documentation.
+- Selected MIT for project-owned source code and original documentation. Added a
+  separate data-license scope record that keeps public redistribution blocked
+  until the CC BY-SA 4.0 prose, rights, and attribution review is complete.
+- Added an `At a glance` README table that summarizes current scan scope,
+  detector coverage, output, exit codes, safety boundaries, and alpha limits,
+  with visual emphasis for key concepts and technical literals.
+- Added a dependency-free Markdown style checker and a CI gate for automatic
+  prose markers. The checker ignores fenced and inline code plus local build,
+  cache, environment, and worktree directories.
+- Added canonical `AGENTS.md` repository instructions, a minimal Claude Code
+  adapter in `CLAUDE.md`, and a prioritized `ROADMAP.md` with explicit release
+  gates and non-goals.
+- Added schema-validated YAML authoring for security sources and dated events,
+  seeded with six reviewed Keyv/Shai-Hulud sources, a confirmed campaign event,
+  and a separately attributed contested-scope event.
+- Added deterministic generation of `docs/SECURITY-INTELLIGENCE.md`,
+  `docs/SECURITY-TIMELINE.md`, and the packaged
+  `security-intelligence.json` resource, with CI drift and wheel-content gates.
+- Added `python -m agentsec` as a source and installed-package entry point.
+- Added an opt-in local benchmark that writes a new redacted aggregate JSON
+  report without copying findings, diagnostics, stderr, or the absolute root.
+- Added a factual license evidence inventory that distinguishes the imported
+  source digest from the adapted AgentSec authoring file and keeps publication
+  blocked pending explicit owner decisions and prose review.
+- Added deterministic generation and wheel packaging of the public scan-result
+  schema digest.
+
+### Changed
+
+- Added a task-oriented usage and comparison guide that explains when AgentSec
+  fits a repository workflow, when SCA, SAST, secret scanning, broader agent
+  configuration scanning, or runtime controls answer a different question, and
+  why campaign traceability, fail-closed coverage, attributable intelligence,
+  confinement, and reproducible fixtures remain the intended distinction.
+  Clarified the bidirectional relationship with
+  `https://cc.bruniaux.com/security/`: AgentSec originated from the guide's
+  threat database, now scans against a bundled versioned projection without
+  network access, and exports reviewed metadata back to the guide and landing
+  mirrors without equating catalogue size with active detector coverage.
+
+- Added concrete README and examples-guide findings for compromised package
+  versions, campaign-correlated startup hooks, review-only hooks, delegated
+  ClawHavoc domains, contested intelligence, and unsupported lockfiles. Each
+  example now separates observed evidence, interpretation, false-positive or
+  attribution limits, manual response, and incomplete-coverage diagnostics.
+
+- Reordered and shortened the README around the first user decision. The page
+  now leads with the product promise, workflow image, and a goal-command-result
+  table; it then states current detectors, exit semantics, scan scopes, safety
+  limits, outputs, and the shortest documentation routes. Deeper architecture
+  and source-of-truth material moved to `docs/project-overview.md`.
+
+- Reworked the project overview around the shipped product surfaces, execution
+  flow, and canonical sources of truth. The README now distinguishes threat
+  intelligence records from executable detector coverage and explains how the
+  runtime database, reports, response playbooks, public feed, guide, and landing
+  fit together. Package and LLM descriptions now use the same bounded product
+  claim, the contributor guide documents the GitHub label taxonomy, and the
+  roadmap links the current cross-platform CI witness.
+
+- Updated the accepted product decision record after integration. It now
+  records two active detector families, completed SARIF, repository-local
+  Action, explain-ledger, playbook, and repeated 12-fixture matrix work without
+  claiming that remote distribution or positive competitor parity is complete.
+
+- Changed the alpha CLI JSON contract from scan-result v1 to v2. Consumers
+  must migrate from the former aggregate `coverage` object to `discovery` plus
+  per-detector rows, or pin an earlier CLI revision. Updated the README,
+  examples, installation guide, roadmap, contributor and agent instructions,
+  LLM prompt, and LLM index for scopes, batch triage, Git-history semantics,
+  and the active schemas. The optional benchmark report now records schema v2
+  scope, discovery selection, and aggregated per-detector inspection counts.
+
+- Updated official `actions/checkout` and `actions/setup-python` workflow
+  dependencies to their Node 24-based v7 majors after validating the previous
+  matrix and its Node 20 deprecation annotations.
+- Recorded the first fully executed green Python 3.11–3.13 matrix across
+  Linux, macOS, and Windows, plus the successful guide and landing feed-mirror
+  check, and closed the corresponding P0 issue.
+- Updated the README, installation guide, roadmap, licensing decision, and
+  evidence inventory for the repository's 2026-08-30 public visibility. The
+  MIT scope remains limited to project-owned code and original documentation;
+  package, tag, archive, GitHub release, and gated-data publication remain
+  blocked pending the recorded data review.
+- Reconciled the competitive benchmark design and static matrix with the seven
+  verified local images. Competitor runtime execution remains blocked until an
+  exact clean-control plan digest receives explicit owner approval.
+- Linked the roadmap and competitive implementation plan to seven public
+  GitHub issues covering licensing, CI, controlled runtime evidence, fixture
+  coverage, teardowns, product decisions, and naming. Tasks 1 through 10 now
+  carry completed checkboxes that match their recorded execution status.
+- Ignored macOS `.DS_Store` metadata at every repository depth.
+
+### Fixed
+
+- Made the competitive tree-evidence regression portable by writing its byte
+  fixture without Windows newline translation and by asserting executable-mode
+  changes only on platforms that expose POSIX mode bits.
+
+- Revalidated an internal symlink alias target before treating it as a covered
+  exclusion. A replaced alias that reuses the same filesystem identity now
+  remains blocking when its textual target changes, and the regression witness
+  no longer depends on platform-specific inode allocation timing.
+- Pruned `.worktrees`, `.claude/worktrees`, and `.serena` as measured
+  generated-or-cache subtrees in the default `source` scope. A real pilot with
+  54 tool-managed nested repositories exposed the missing classification;
+  `repository` scope still includes these directories explicitly.
+
+- Redacted the bundled threat-database resource path explicitly when
+  `--redact` is active, including on Windows CI paths outside a user home.
+- Canonicalized competitor image bundle paths and line endings before hashing,
+  so the recorded approval digest is identical on Windows, macOS, and Linux.
+- Corrected the `cc-audit` benchmark image dependency stage to include its
+  manifest-declared benchmark target before `cargo fetch --locked`. The first
+  controlled build attempt and its three immutable image IDs are recorded in
+  the renewed build gate. Follow-up corrections align the immutable Rust
+  builder image with the repository's exact tracked Rust 1.93.0 toolchain so
+  the source build can remain network-disabled, then resolve its declared
+  rustup components in the dependency stage before source copy. No competitor
+  scanner was executed.
+- Stopped traversing nested Git repositories and worktrees as though they were
+  part of the requested root. They now produce one warning with an instruction
+  to scan the nested repository separately. Symlinks and Windows reparse points
+  remain unread, fail closed, and produce one aggregate diagnostic instead of
+  exhausting the diagnostic budget one path at a time. Full regular-file hash
+  coverage remains enabled for the requested repository. Large monorepositories
+  now receive bounded defaults of 1,000,000 directory entries and 100,000
+  opened directories, with CLI options that can lower both ceilings.
+- Defined the cross-platform test contract. Git checks out tracked text with
+  `LF`; runtime schema verification normalizes line endings; redacted root paths
+  use a stable delimiter; POSIX descriptor regressions run on POSIX; and Windows
+  keeps native safe-reader coverage without a Linux-only percentage comparison.
+  CI checks unsupported input plus detector findings against dedicated fixtures.
+- Made POSIX capability access fail closed when absent and type-check cleanly on
+  Windows without weakening directory or process-tree handling.
+- Normalized scan-result schema line endings before computing its digest, so
+  Windows `CRLF` checkouts validate against the committed `LF` digest.
+- Normalized text input line endings before computing public-feed digests, so
+  Windows `CRLF` checkouts generate the same artifact as `LF` checkouts.
+- Reduced the README to a concise project entry point. Operational commands,
+  coverage details, JSON output, self-scan expectations, privacy guidance, and
+  benchmark instructions now have one canonical document each.
+- Reviewed all 19 Markdown files tracked at the start of the work and removed
+  the identified prose markers without changing threat facts, source titles,
+  commands, hashes, dates, exit codes, or license decisions. Generated
+  intelligence punctuation now comes from its renderer.
+- Expanded `AGENTS.md` with post-hardening generation, projection, worktree, and
+  verification rules. `CLAUDE.md` now covers Claude Code navigation,
+  delegation, generated-file ownership, and final review without duplicating
+  the repository contract.
+- Made authoring-to-runtime threat-data projection explicit and validated. The
+  runtime artifact and `db info` now report projected and ignored records by
+  reason instead of silently hiding the builder's V0.1 scope.
+- Allowed each detector to provide its own reviewed HTTPS remediation URL while
+  rejecting relative, credential-bearing, query-bearing, fragment-bearing, and
+  non-HTTPS values in the public result schema.
+- Allowed intelligence events to retain multiple distinct lifecycle dates, such
+  as occurrence and disclosure, instead of incorrectly requiring exactly one
+  date field. Intelligence dates now reject impossible calendar values rather
+  than validating only their textual shape.
+- Removed the safe reader's one-byte sentinel read. POSIX and Windows reads now
+  consume at most the exact remaining physical byte budget, accept exact-size
+  and zero-byte files, including empty files at a zero aggregate budget, and use
+  post-read identity and metadata checks to reject
+  concurrent growth. A failed safe read stops the detector so unreturned bytes
+  cannot be spent again on a later file. The public schema again permits `null`
+  remediation URLs for protocol-compatible external detectors while the
+  built-in detector keeps emitting the canonical security URL.
+- Added immutable detector metadata and deterministic `detectors explain`
+  output for supported inputs, campaign and technique IDs, canonical sources,
+  limitations, remediation, and declared exclusions.
+- Added stable V0.1 `not_scanned` capability IDs to human and JSON results,
+  without treating out-of-scope capabilities as failed in-scope checks. Every
+  finding now links to the security remediation page.
+- Added a 1,000,000,000-byte aggregate scan budget and
+  `--max-total-bytes`. Budget exhaustion stops before the next unsafe read and
+  returns an incomplete result. `--max-file-bytes` now rejects values above the
+  safe reader's 4,000,000-byte hard cap.
+- Replaced the evidence-only positive golden with a schema-validated semantic
+  JSON golden covering verdict, coverage, diagnostics, exclusions, finding
+  severity, confidence, paths, campaign and technique IDs, and remediation.
+- Preserved contested npm intelligence and package/version source attribution in
+  the generated database and immutable runtime model. `@keyv/*@6.0.0` now emits
+  `high/contested` findings attributed to JFrog and SafeDep, while exact
+  `keyv@6.0.0` remains `critical/confirmed` and lifecycle-only evidence remains
+  `medium/review`.
+- Disabled local Git-history subprocess execution for untrusted repositories until
+  strict metadata confinement is available. Repositories with `.git` now fail
+  closed with an incomplete result instead of allowing Git to follow object
+  symlinks, alternates, or external gitfiles.
+- Canonicalized scan root, diagnostic, and finding paths to forward-slash form in
+  deterministic JSON and human output, including Windows paths, and made the CI
+  self-scan assertion tolerate native separators defensively.
+- Made package builds and the packaging integration test run with
+  `PIP_NO_INDEX=1` and `python -m build --no-isolation` after installing the full
+  development dependency set, including Hatchling.
+- Prevented the blocking `LICENSE-DECISION.md` record from being emitted as a
+  wheel `License-File` metadata field.
+- Replaced the contradictory clean self-scan expectation with an explicit exit
+  `2` gate that preserves positive fixtures and the unsupported `bun.lockb`
+  diagnostic; a separate negative-fixture scan proves completed applicable
+  behavior.
+
+### Removed
+
+- Removed eight internal implementation plans and design specifications from
+  the current public tree. Their historical commits remain unchanged.
+
+### Blocked
+
+- Public visibility, tagging, and publication remain blocked pending the
+  threat-data prose, ownership, attribution, and compatibility review in
+  `LICENSE-DECISION.md`.
+
+## [0.1.0-alpha] - pending
+
+### Release metadata
+
+| Field | Value |
+| --- | --- |
+| Python package | `0.1.0a0` |
+| Intended Git tag | `v0.1.0-alpha` |
+| Threat database | `2.27.0` |
+| Detector | `shai-hulud-keyv` version `1` |
+| JSON schema | version `1` |
+| Python | 3.11, 3.12, and 3.13 |
+
+### Added
+
+- Read-only, offline-by-default repository discovery with bounded traversal,
+  diagnostic reporting, and incomplete-scan exit behavior.
+- Schema-validated threat database 2.26.0 import, reviewed 2.27.0 intelligence
+  update, and deterministic runtime JSON build.
+- `shai-hulud-keyv` detector for supported lockfiles, installed package metadata,
+  exact payload hashes, and repository-local startup configuration. Local Git
+  history is explicitly reported as not scanned until strict confinement exists.
+- Human and versioned JSON output, redaction, detector and database inspection,
+  and the dependency-free `doctor` command.
+- Positive, negative, malformed-input, safety, integration, packaging, and schema
+  regression tests.
+- User, contributor, security-reporting, licensing-gate, and alpha limitation
+  documentation.
+- Cross-platform CI targets for Linux, macOS, and Windows on Python 3.11, 3.12,
+  and 3.13. Passing status is not claimed until those jobs run.

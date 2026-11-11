@@ -1,0 +1,745 @@
+import os
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+
+from agentsec.engine import discovery as discovery_module
+from agentsec.engine.discovery import DiscoveryLimits, discover
+from agentsec.models import DiagnosticKind
+from agentsec.scopes import ExclusionReason, ScanScope
+
+LIMITS = DiscoveryLimits(max_file_bytes=4_000_000, max_files=1000, max_diagnostics=100)
+
+
+def test_default_total_byte_budget_is_bounded() -> None:
+    assert LIMITS.max_total_bytes == 1_000_000_000
+
+
+def test_missing_root_is_error(tmp_path: Path):
+    files, diagnostics = discover(tmp_path / "missing", LIMITS)
+    assert files == ()
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+
+
+def test_files_are_relative_and_sorted(tmp_path: Path):
+    (tmp_path / "b.txt").write_text("b")
+    (tmp_path / "a.txt").write_text("a")
+    files, diagnostics = discover(tmp_path, LIMITS)
+    assert diagnostics == ()
+    assert [item.relative_path.as_posix() for item in files] == ["a.txt", "b.txt"]
+
+
+def test_source_scope_groups_explicit_exclusions(tmp_path: Path) -> None:
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "main.py").write_text("print('safe')")
+    (tmp_path / "package-lock.json").write_text("{}")
+    (tmp_path / "asset.png").write_bytes(b"image")
+    for directory in ("node_modules", "dist"):
+        path = tmp_path / directory
+        path.mkdir()
+        (path / "payload.js").write_text("ignored")
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.SOURCE)
+
+    assert result.diagnostics == ()
+    assert [item.relative_path.as_posix() for item in result.files] == [
+        "package-lock.json",
+        "src/main.py",
+    ]
+    assert result.coverage.files_selected == 2
+    assert result.coverage.entries_seen == 6
+    assert tuple(
+        (item.reason, item.paths, item.subtrees)
+        for item in result.coverage.exclusions
+    ) == (
+        (ExclusionReason.BINARY_ASSET, 1, 0),
+        (ExclusionReason.GENERATED_OR_CACHE, 1, 1),
+        (ExclusionReason.INSTALLED_DEPENDENCIES, 1, 1),
+    )
+
+
+def test_dependency_scope_selects_nested_lockfiles_and_installed_tree(
+    tmp_path: Path,
+) -> None:
+    app = tmp_path / "apps" / "web"
+    installed = app / "node_modules" / "keyv"
+    installed.mkdir(parents=True)
+    (installed / "package.json").write_text("{}")
+    (app / "src").mkdir()
+    (app / "src" / "main.ts").write_text("export {}")
+    (app / "pnpm-lock.yaml").write_text("lockfileVersion: '9.0'")
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.DEPENDENCIES)
+
+    assert result.diagnostics == ()
+    assert [item.relative_path.as_posix() for item in result.files] == [
+        "apps/web/node_modules/keyv/package.json",
+        "apps/web/pnpm-lock.yaml",
+    ]
+    outside = next(
+        item
+        for item in result.coverage.exclusions
+        if item.reason is ExclusionReason.OUTSIDE_DEPENDENCY_SCOPE
+    )
+    assert outside.paths == 1
+    assert outside.subtrees == 0
+
+
+def test_repository_scope_keeps_binary_generated_and_dependency_files(
+    tmp_path: Path,
+) -> None:
+    for relative in ("asset.png", "dist/output.js", "node_modules/keyv/index.js"):
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("content")
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.REPOSITORY)
+
+    assert [item.relative_path.as_posix() for item in result.files] == [
+        "asset.png",
+        "dist/output.js",
+        "node_modules/keyv/index.js",
+    ]
+    assert result.coverage.exclusions == ()
+
+
+def test_external_symlink_is_reported_but_not_followed(tmp_path: Path):
+    outside = tmp_path.parent / "outside-agentsec-test"
+    outside.write_text("secret")
+    (tmp_path / "escape").symlink_to(outside)
+    files, diagnostics = discover(tmp_path, LIMITS)
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+    assert diagnostics[0].path == tmp_path
+    assert "1 symlinked repository path" in diagnostics[0].message
+
+
+def test_internal_symlink_alias_is_excluded_without_following(tmp_path: Path) -> None:
+    target = tmp_path / "real.txt"
+    target.write_text("canonical")
+    (tmp_path / "alias.txt").symlink_to(target.name)
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.REPOSITORY)
+
+    assert [item.relative_path.as_posix() for item in result.files] == ["real.txt"]
+    assert result.diagnostics == ()
+    assert tuple(
+        (item.reason, item.paths, item.subtrees)
+        for item in result.coverage.exclusions
+    ) == ((ExclusionReason.INTERNAL_SYMLINK_ALIAS, 1, 0),)
+
+
+def test_internal_directory_alias_is_excluded_when_canonical_tree_is_covered(
+    tmp_path: Path,
+) -> None:
+    target = tmp_path / "real"
+    target.mkdir()
+    (target / "payload.txt").write_text("canonical")
+    (tmp_path / "alias").symlink_to(target.name, target_is_directory=True)
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.REPOSITORY)
+
+    assert [item.relative_path.as_posix() for item in result.files] == [
+        "real/payload.txt"
+    ]
+    assert result.diagnostics == ()
+    alias = next(
+        item
+        for item in result.coverage.exclusions
+        if item.reason is ExclusionReason.INTERNAL_SYMLINK_ALIAS
+    )
+    assert (alias.paths, alias.subtrees) == (1, 1)
+
+
+def test_broken_internal_symlink_remains_blocking(tmp_path: Path) -> None:
+    (tmp_path / "broken").symlink_to("missing.txt")
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.REPOSITORY)
+
+    assert result.files == ()
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR
+        and "1 symlinked repository path" in diagnostic.message
+        for diagnostic in result.diagnostics
+    )
+    assert result.coverage.exclusions == ()
+
+
+def test_alias_to_source_pruned_tree_remains_blocking(tmp_path: Path) -> None:
+    installed = tmp_path / "node_modules"
+    installed.mkdir()
+    (installed / "payload.js").write_text("not covered")
+    (tmp_path / "installed-alias").symlink_to(
+        installed.name, target_is_directory=True
+    )
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.SOURCE)
+
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR
+        and "1 symlinked repository path" in diagnostic.message
+        for diagnostic in result.diagnostics
+    )
+    reasons = {item.reason for item in result.coverage.exclusions}
+    assert ExclusionReason.INSTALLED_DEPENDENCIES in reasons
+    assert ExclusionReason.INTERNAL_SYMLINK_ALIAS not in reasons
+
+
+def test_internal_alias_target_changed_with_same_identity_remains_blocking(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = tmp_path / "real.txt"
+    target.write_text("canonical")
+    outside = tmp_path.parent / "outside-agentsec-alias-race.txt"
+    outside.write_text("external")
+    alias = tmp_path / "alias.txt"
+    alias.symlink_to(target.name)
+    original_readlink = os.readlink
+    alias_readlink_calls = 0
+
+    def changed_target_with_same_identity(
+        path: str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        *args: object,
+        **kwargs: object,
+    ) -> str | bytes:
+        nonlocal alias_readlink_calls
+        if Path(path) == alias:
+            alias_readlink_calls += 1
+            return target.name if alias_readlink_calls == 1 else str(outside)
+        return original_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "readlink", changed_target_with_same_identity)
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.REPOSITORY)
+
+    assert alias_readlink_calls >= 2
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR
+        and "1 symlinked repository path" in diagnostic.message
+        for diagnostic in result.diagnostics
+    )
+    assert all(
+        item.reason is not ExclusionReason.INTERNAL_SYMLINK_ALIAS
+        for item in result.coverage.exclusions
+    )
+
+
+def test_external_directory_symlink_is_reported_but_not_traversed(tmp_path: Path):
+    outside = tmp_path.parent / "outside-agentsec-directory"
+    outside.mkdir()
+    (outside / "secret.txt").write_text("secret")
+    (tmp_path / "linked-dir").symlink_to(outside, target_is_directory=True)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+    assert "1 symlinked repository path" in diagnostics[0].message
+
+
+def test_symlinked_paths_are_aggregated_into_one_incomplete_diagnostic(
+    tmp_path: Path,
+) -> None:
+    outside = tmp_path.parent / "outside-agentsec-symlink-batch"
+    outside.mkdir()
+    for name in ("alpha", "beta", "gamma"):
+        target = outside / f"{name}.txt"
+        target.write_text(name)
+        (tmp_path / name).symlink_to(target)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+    assert diagnostics[0].path == tmp_path
+    assert diagnostics[0].message == (
+        "Refusing to inspect 3 symlinked repository paths; scan incomplete"
+    )
+
+
+def test_nested_git_repository_is_skipped_with_one_warning(tmp_path: Path) -> None:
+    (tmp_path / "root.txt").write_text("root")
+    nested = tmp_path / ".claude" / "worktrees" / "agent-1"
+    nested.mkdir(parents=True)
+    (nested / ".git").write_text("gitdir: /outside/worktrees/agent-1")
+    deep = nested / "node_modules" / ".pnpm" / "package" / "test"
+    deep.mkdir(parents=True)
+    (deep / "payload.txt").write_text("must not be traversed")
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert [item.relative_path.as_posix() for item in files] == ["root.txt"]
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.WARNING
+    assert diagnostics[0].path == tmp_path
+    assert diagnostics[0].message == (
+        "Skipped 1 nested Git repository; scan it separately for coverage"
+    )
+
+
+def test_nested_git_repositories_are_aggregated_into_one_warning(tmp_path: Path) -> None:
+    for name in ("agent-a", "agent-b", "agent-c"):
+        nested = tmp_path / ".worktrees" / name
+        nested.mkdir(parents=True)
+        (nested / ".git").write_text(f"gitdir: /outside/{name}")
+        (nested / "payload.txt").write_text("not part of the requested root")
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.WARNING
+    assert diagnostics[0].path == tmp_path
+    assert diagnostics[0].message == (
+        "Skipped 3 nested Git repositories; scan each separately for coverage"
+    )
+
+
+def test_default_directory_budget_supports_large_monorepositories() -> None:
+    assert LIMITS.max_directories == 100_000
+
+
+def test_default_entry_budget_supports_large_monorepositories() -> None:
+    assert LIMITS.max_entries == 1_000_000
+
+
+def test_windows_reparse_directory_is_reported_but_not_traversed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    junction = tmp_path / "junction"
+    junction.mkdir()
+    (junction / "secret.txt").write_text("secret")
+    original_entry_lstat = discovery_module._safe_entry_lstat
+
+    def reparse_lstat(
+        path: Path, name: str, parent_fd: int | None, diagnostics: object
+    ):
+        entry_stat = original_entry_lstat(path, name, parent_fd, diagnostics)
+        assert entry_stat is not None
+        if path == junction:
+            return SimpleNamespace(
+                st_mode=entry_stat.st_mode,
+                st_size=entry_stat.st_size,
+                st_dev=entry_stat.st_dev,
+                st_ino=entry_stat.st_ino,
+                st_file_attributes=0x400,
+            )
+        return entry_stat
+
+    monkeypatch.setattr(discovery_module, "_safe_entry_lstat", reparse_lstat)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+    assert "1 symlinked repository path" in diagnostics[0].message
+
+
+def test_directory_mutated_to_external_symlink_before_open_is_an_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    mutable = tmp_path / "mutable"
+    mutable.mkdir()
+    outside = tmp_path.parent / "outside-agentsec-race"
+    outside.mkdir()
+    (outside / "secret.txt").write_text("secret")
+    original_lstat = Path.lstat
+    mutable_lstat_calls = 0
+
+    def mutate_on_revalidation(path: Path):
+        nonlocal mutable_lstat_calls
+        if path == mutable:
+            mutable_lstat_calls += 1
+            if mutable_lstat_calls == 2:
+                mutable.rmdir()
+                mutable.symlink_to(outside, target_is_directory=True)
+        return original_lstat(path)
+
+    monkeypatch.setattr(Path, "lstat", mutate_on_revalidation)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert mutable_lstat_calls >= 2
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR and diagnostic.path == mutable
+        for diagnostic in diagnostics
+    )
+
+
+def test_directory_mutated_after_open_is_rejected_before_entries_are_processed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    mutable = tmp_path / "mutable-after-open"
+    mutable.mkdir()
+    (mutable / "payload.txt").write_text("safe")
+    outside = tmp_path.parent / "outside-agentsec-after-open"
+    outside.mkdir()
+    (outside / "payload.txt").write_text("external-secret")
+    parked = tmp_path / "parked-original"
+    original_open_directory = discovery_module._open_directory
+
+    def mutate_after_open(path: Path, *args: object, **kwargs: object):
+        opened = original_open_directory(path, *args, **kwargs)
+        if path == mutable and opened is not None:
+            mutable.rename(parked)
+            mutable.symlink_to(outside, target_is_directory=True)
+        return opened
+
+    monkeypatch.setattr(discovery_module, "_supports_fd_traversal", lambda: False)
+    monkeypatch.setattr(discovery_module, "_open_directory", mutate_after_open)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR and diagnostic.path == mutable
+        for diagnostic in diagnostics
+    )
+
+
+def test_path_fallback_revalidates_parent_around_each_child_inspection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    parent = tmp_path / "parent"
+    parent.mkdir()
+    (parent / "payload.txt").write_text("safe")
+    outside = tmp_path.parent / "outside-agentsec-child-inspection"
+    outside.mkdir()
+    (outside / "payload.txt").write_text("external-secret")
+    parked = tmp_path / "parked-parent"
+    original_entry_lstat = discovery_module._safe_entry_lstat
+    mutated = False
+
+    def mutate_before_child_lstat(
+        path: Path, name: str, parent_fd: int | None, diagnostics: object
+    ):
+        nonlocal mutated
+        if path == parent / "payload.txt" and parent_fd is None and not mutated:
+            mutated = True
+            parent.rename(parked)
+            parent.symlink_to(outside, target_is_directory=True)
+        return original_entry_lstat(path, name, parent_fd, diagnostics)
+
+    monkeypatch.setattr(discovery_module, "_supports_fd_traversal", lambda: False)
+    monkeypatch.setattr(
+        discovery_module,
+        "_safe_entry_lstat",
+        mutate_before_child_lstat,
+    )
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert mutated is True
+    assert files == ()
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR and diagnostic.path == parent
+        for diagnostic in diagnostics
+    )
+
+
+def test_git_is_pruned_but_evidence_directories_and_oversized_files_are_kept(
+    tmp_path: Path,
+):
+    (tmp_path / ".git").mkdir()
+    (tmp_path / ".git" / "config").write_text("ignored")
+    for directory in ("build", "dist", "node_modules"):
+        path = tmp_path / directory
+        path.mkdir()
+        (path / "payload").write_text("evidence")
+    (tmp_path / "oversized.bin").write_bytes(b"x" * 5)
+    limits = DiscoveryLimits(max_file_bytes=1, max_files=1000, max_diagnostics=100)
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert [item.relative_path.as_posix() for item in files] == [
+        "build/payload",
+        "dist/payload",
+        "node_modules/payload",
+        "oversized.bin",
+    ]
+    assert files[-1].size == 5
+    assert diagnostics == ()
+
+
+def test_depth_limit_keeps_shallow_files_and_reports_truncation(tmp_path: Path):
+    level_one = tmp_path / "level-one"
+    level_one.mkdir()
+    (level_one / "visible.txt").write_text("visible")
+    level_two = level_one / "level-two"
+    level_two.mkdir()
+    (level_two / "hidden.txt").write_text("hidden")
+    limits = DiscoveryLimits(
+        max_file_bytes=100,
+        max_files=100,
+        max_diagnostics=100,
+        max_depth=1,
+    )
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert [item.relative_path.as_posix() for item in files] == ["level-one/visible.txt"]
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR and "max_depth" in diagnostic.message
+        for diagnostic in diagnostics
+    )
+
+
+def test_depth_limit_above_safe_recursive_bound_is_rejected():
+    with pytest.raises(ValueError, match="max_depth"):
+        DiscoveryLimits(
+            max_file_bytes=100,
+            max_files=100,
+            max_diagnostics=100,
+            max_depth=257,
+        )
+
+
+def test_entry_limit_rejects_oversized_directory_without_partial_ordering(tmp_path: Path):
+    for name in ("c.txt", "a.txt", "b.txt"):
+        (tmp_path / name).write_text(name)
+    limits = DiscoveryLimits(
+        max_file_bytes=100,
+        max_files=100,
+        max_diagnostics=100,
+        max_entries=2,
+    )
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert files == ()
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR and "max_entries" in diagnostic.message
+        for diagnostic in diagnostics
+    )
+
+
+def test_directory_limit_is_deterministic_and_marks_discovery_incomplete(tmp_path: Path):
+    for name in ("b", "a"):
+        directory = tmp_path / name
+        directory.mkdir()
+        (directory / "payload.txt").write_text(name)
+    limits = DiscoveryLimits(
+        max_file_bytes=100,
+        max_files=100,
+        max_diagnostics=100,
+        max_directories=2,
+    )
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert [item.relative_path.as_posix() for item in files] == ["a/payload.txt"]
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR and "max_directories" in diagnostic.message
+        for diagnostic in diagnostics
+    )
+
+
+def test_file_limit_is_deterministic_and_marks_discovery_incomplete(tmp_path: Path):
+    for name in ("c.txt", "a.txt", "b.txt"):
+        (tmp_path / name).write_text(name)
+    limits = DiscoveryLimits(max_file_bytes=100, max_files=2, max_diagnostics=100)
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert [item.relative_path.as_posix() for item in files] == ["a.txt", "b.txt"]
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+    assert "max_files" in diagnostics[0].message
+
+
+def test_reaching_file_limit_exactly_is_complete(tmp_path: Path):
+    (tmp_path / "a.txt").write_text("a")
+    limits = DiscoveryLimits(max_file_bytes=100, max_files=1, max_diagnostics=100)
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert [item.relative_path.as_posix() for item in files] == ["a.txt"]
+    assert diagnostics == ()
+
+
+def test_file_limit_stops_before_inspecting_remaining_files(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    for name in ("c.txt", "a.txt", "b.txt"):
+        (tmp_path / name).write_text(name)
+    inspected: list[str] = []
+    original_entry_lstat = discovery_module._safe_entry_lstat
+
+    def recording_lstat(
+        path: Path, name: str, parent_fd: int | None, diagnostics: object
+    ):
+        if path.suffix == ".txt":
+            inspected.append(path.name)
+        return original_entry_lstat(path, name, parent_fd, diagnostics)
+
+    monkeypatch.setattr(discovery_module, "_safe_entry_lstat", recording_lstat)
+    limits = DiscoveryLimits(max_file_bytes=100, max_files=1, max_diagnostics=100)
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert [item.relative_path.as_posix() for item in files] == ["a.txt"]
+    assert inspected == ["a.txt"]
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+
+
+def test_lstat_error_is_reported_and_other_files_are_retained(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    bad = tmp_path / "bad.txt"
+    bad.write_text("bad")
+    (tmp_path / "good.txt").write_text("good")
+    original_entry_lstat = discovery_module._safe_entry_lstat
+
+    def selective_lstat(
+        path: Path, name: str, parent_fd: int | None, diagnostics: object
+    ):
+        if path == bad:
+            diagnostics.add(path, "cannot inspect entry: denied")
+            return None
+        return original_entry_lstat(path, name, parent_fd, diagnostics)
+
+    monkeypatch.setattr(discovery_module, "_safe_entry_lstat", selective_lstat)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert [item.relative_path.as_posix() for item in files] == ["good.txt"]
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+    assert diagnostics[0].path == bad
+
+
+def test_walk_error_is_reported_not_clean(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    def failing_scandir(*args: object, **kwargs: object):
+        raise PermissionError(13, "denied", str(tmp_path / "private"))
+
+    monkeypatch.setattr(discovery_module.os, "scandir", failing_scandir)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+
+
+def test_diagnostics_are_bounded_with_final_truncation_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    for name in ("c.txt", "a.txt", "b.txt"):
+        (tmp_path / name).write_text(name)
+
+    original_entry_lstat = discovery_module._safe_entry_lstat
+
+    def denied_lstat(
+        path: Path, name: str, parent_fd: int | None, diagnostics: object
+    ):
+        if path.suffix == ".txt":
+            diagnostics.add(path, f"cannot inspect entry: denied: {path.name}")
+            return None
+        return original_entry_lstat(path, name, parent_fd, diagnostics)
+
+    monkeypatch.setattr(discovery_module, "_safe_entry_lstat", denied_lstat)
+    limits = DiscoveryLimits(max_file_bytes=100, max_files=100, max_diagnostics=1)
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert files == ()
+    assert len(diagnostics) == 2
+    assert diagnostics[0].path == tmp_path / "a.txt"
+    assert diagnostics[-1].kind is DiagnosticKind.ERROR
+    assert "truncated" in diagnostics[-1].message
+
+
+def test_zero_diagnostic_limit_still_returns_an_error(tmp_path: Path):
+    (tmp_path / "file.txt").write_text("data")
+    limits = DiscoveryLimits(max_file_bytes=100, max_files=0, max_diagnostics=0)
+
+    files, diagnostics = discover(tmp_path, limits)
+
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+    assert "truncated" in diagnostics[0].message
+
+
+def test_non_directory_root_is_error(tmp_path: Path):
+    root = tmp_path / "file.txt"
+    root.write_text("not a repository")
+
+    files, diagnostics = discover(root, LIMITS)
+
+    assert files == ()
+    assert len(diagnostics) == 1
+    assert diagnostics[0].kind is DiagnosticKind.ERROR
+
+
+@pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="FIFO requires POSIX mkfifo")
+def test_fifo_is_not_analyzable_and_reports_incomplete_coverage(tmp_path: Path):
+    fifo = tmp_path / "hostile.fifo"
+    os.mkfifo(fifo)
+
+    files, diagnostics = discover(tmp_path, LIMITS)
+
+    assert files == ()
+    assert any(
+        diagnostic.kind is DiagnosticKind.ERROR
+        and diagnostic.path == fifo
+        and "special" in diagnostic.message
+        for diagnostic in diagnostics
+    )
+
+
+def test_source_scope_lists_excluded_archives_without_selecting_them(tmp_path: Path) -> None:
+    (tmp_path / ".claude" / "hooks").mkdir(parents=True)
+    (tmp_path / ".claude" / "hooks" / "bundle.ZIP").write_bytes(b"PK")
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "tools.7z").write_bytes(b"7z")
+    (tmp_path / "picture.png").write_bytes(b"image")
+    (tmp_path / "main.py").write_text("print('safe')")
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.SOURCE)
+
+    assert [item.relative_path.as_posix() for item in result.files] == ["main.py"]
+    assert [item.relative_path.as_posix() for item in result.archives] == [
+        ".claude/hooks/bundle.ZIP",
+        "docs/tools.7z",
+    ]
+    assert result.archives[0].size == 2
+    assert result.archives[0].absolute_path == (
+        tmp_path.resolve() / ".claude" / "hooks" / "bundle.ZIP"
+    )
+    assert result.coverage.files_selected == 1
+    excluded = {item.reason: item.paths for item in result.coverage.exclusions}
+    assert excluded[ExclusionReason.BINARY_ASSET] == 3
+
+
+def test_repository_scope_selects_archives_and_does_not_list_them_twice(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "bundle.zip").write_bytes(b"PK")
+
+    result = discover(tmp_path, LIMITS, scope=ScanScope.REPOSITORY)
+
+    assert [item.relative_path.as_posix() for item in result.files] == ["bundle.zip"]
+    assert result.archives == ()
+
+
+def test_archive_listing_stops_at_max_files_with_an_error(tmp_path: Path) -> None:
+    for index in range(3):
+        (tmp_path / f"bundle-{index}.zip").write_bytes(b"PK")
+    limits = DiscoveryLimits(max_file_bytes=4_000_000, max_files=2, max_diagnostics=100)
+
+    result = discover(tmp_path, limits, scope=ScanScope.SOURCE)
+
+    assert len(result.archives) == 2
+    assert any(
+        item.kind is DiagnosticKind.ERROR and "archive" in item.message
+        for item in result.diagnostics
+    )

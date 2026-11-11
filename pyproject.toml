@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agentsec-triage"
+version = "0.1.0a0"
+description = "Offline repository triage for documented supply-chain and coding-agent attacks"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "License decision pending before package release" }
+license-files = []
+authors = [{ name = "Florian Bruniaux" }]
+dependencies = []
+
+[project.scripts]
+agentsec = "agentsec.cli:entrypoint"
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2,<2",
+  "hatchling>=1.27,<2",
+  "jsonschema>=4.23,<5",
+  "mypy>=1.15,<2",
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<7",
+  "pyyaml>=6.0,<7",
+  "ruff>=0.11,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agentsec"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"schemas/scan-result-v1.schema.json" = "agentsec/resources/scan-result-v1.schema.json"
+"schemas/scan-result-v1.schema.sha256" = "agentsec/resources/scan-result-v1.schema.sha256"
+"schemas/scan-result-v2.schema.json" = "agentsec/resources/scan-result-v2.schema.json"
+"schemas/scan-result-v2.schema.sha256" = "agentsec/resources/scan-result-v2.schema.sha256"
+"schemas/batch-result-v1.schema.json" = "agentsec/resources/batch-result-v1.schema.json"
+"schemas/batch-result-v1.schema.sha256" = "agentsec/resources/batch-result-v1.schema.sha256"
+"schemas/detector-explain-v1.schema.json" = "agentsec/resources/detector-explain-v1.schema.json"
+"schemas/detector-explain-v1.schema.sha256" = "agentsec/resources/detector-explain-v1.schema.sha256"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.coverage",
+  "/.mypy_cache",
+  "/.pytest_cache",
+  "/.ruff_cache",
+  "/.superpowers",
+  "/.venv",
+  "/build",
+  "/dist",
+]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["agentsec"]

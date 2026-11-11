@@ -1,0 +1,41 @@
+# AgentSec Triage
+
+AgentSec Triage turns sourced intelligence about developer,
+software-supply-chain, and coding-agent attacks into deterministic checks over
+explicit local repository roots. Scans are read-only and offline by default.
+They report findings, diagnostics, exclusions, per-detector coverage, and
+incomplete checks; they never certify a repository or system as clean.
+
+## Core
+
+- [Start here](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/README.md)
+- [Technical project overview](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/project-overview.md)
+- [When to use AgentSec and comparison guide](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/when-to-use.md)
+- [Installation](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/installation.md)
+- [Examples and verdicts](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/examples.md)
+- [Repository-local action](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/action.yml)
+- [Pinned local-action workflow](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/examples/agentsec-local-action.yml)
+- [Copy-ready audit prompt](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/PROMPT.md)
+
+## Security and intelligence
+
+- [Security policy](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/SECURITY.md)
+- [Security intelligence](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/SECURITY-INTELLIGENCE.md)
+- [Security timeline](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/SECURITY-TIMELINE.md)
+- [Intelligence authoring](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/intelligence-authoring.md)
+- [Threat database update command](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/.claude/commands/update-threat-db.md)
+- [Public security feed](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/exports/security-feed.v1.json)
+
+## Project governance
+
+- [Changelog](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/CHANGELOG.md)
+- [Roadmap](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/ROADMAP.md)
+- [Product decisions](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/competitive-analysis/PRODUCT-DECISIONS.md)
+- [Naming brief](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/NAMING.md)
+- [Naming comprehension test kit](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/naming-comprehension-test-kit.md)
+- [Benchmark results](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/competitive-analysis/BENCHMARK-RESULTS.md)
+- [License prose inventory](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/docs/LICENSE-PROSE-INVENTORY.json)
+- [Contributing](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/CONTRIBUTING.md)
+- [MIT code license](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/LICENSE)
+- [Data license status](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/LICENSE-DATA.md)
+- [Publication gate](https://github.com/FlorianBruniaux/agentsec-triage/blob/main/LICENSE-DECISION.md)

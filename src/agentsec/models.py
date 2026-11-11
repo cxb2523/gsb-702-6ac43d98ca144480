@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import PurePath
 from types import MappingProxyType
+from typing import Any
 
 from agentsec.scopes import ExclusionReason, ScanScope
 
@@ -231,6 +232,7 @@ class ScanResult:
     scope: ScanScope = ScanScope.SOURCE
     discovery: DiscoveryCoverage = field(default_factory=DiscoveryCoverage)
     global_not_scanned: tuple[str, ...] = ()
+    coverage_audit: dict[str, Any] | None = None
 
     @property
     def complete(self) -> bool:

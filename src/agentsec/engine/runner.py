@@ -10,6 +10,7 @@ from time import monotonic_ns
 
 from agentsec import __version__
 from agentsec.detectors.base import Detector, ScanContext
+from agentsec.engine.coverage_audit import audit_scan_coverage, degraded_audit
 from agentsec.engine.discovery import (
     DiscoveredFile,
     DiscoveryLimits,
@@ -235,7 +236,7 @@ def run_scan(
 
     _emit_progress(progress, 5, "Building report")
     elapsed_ms = (monotonic_ns() - started_ns) // 1_000_000
-    return ScanResult(
+    result = ScanResult(
         tool_version=__version__,
         database_version=database.version,
         root=context_root,
@@ -246,6 +247,12 @@ def run_scan(
         discovery=discovery_coverage,
         global_not_scanned=_GLOBAL_NOT_SCANNED,
     )
+    try:
+        coverage_audit = audit_scan_coverage(result)
+    except Exception:  # pragma: no cover - the audit must never break a scan
+        _LOGGER.debug("Coverage audit failed", exc_info=True)
+        coverage_audit = degraded_audit(scope)
+    return replace(result, coverage_audit=coverage_audit)
 
 
 def _emit_progress(
